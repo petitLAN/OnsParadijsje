@@ -131,11 +131,7 @@
     const defaultCountdownCopy = ui.countdown || {};
     const countdownCopy = {
       ...defaultCountdownCopy,
-      ...countdownData,
-      funFacts: {
-        ...(defaultCountdownCopy.funFacts || defaultCountdownCopy.numberFunFacts || {}),
-        ...(countdownData.funFacts || countdownData.numberFunFacts || {})
-      }
+      ...countdownData
     };
     const targetDate = frame.targetDate || countdownData.targetDate || config.meta.countdownTarget;
     return renderShell(frame, `
@@ -144,9 +140,6 @@
         data-target-date="${esc(targetDate)}"
         data-initial-text="${esc(countdownCopy.initialText || "Counting down.")}"
         data-many-days-text="${esc(countdownCopy.manyDaysText || "days left.")}"
-        data-fun-fact-prefix="${esc(countdownCopy.funFactPrefix || "")}"
-        data-fun-fact-fallback="${esc(countdownCopy.funFactFallback || "{n} is the number of days left in this tiny countdown adventure.")}"
-        data-number-fun-facts="${esc(JSON.stringify(countdownCopy.funFacts || {}))}"
         data-days-left-tag="${esc(countdownCopy.daysLeftTag || "Days left")}"
         data-one-day-text="${esc(countdownCopy.oneDayText || "day left.")}"
         data-tomorrow-text="${esc(countdownCopy.tomorrowText || "Tomorrow ❤️")}"
@@ -567,11 +560,11 @@
       const dayDiff = Math.ceil((targetDay - today) / msPerDay);
       if (dayDiff > 1) {
         daysEl.textContent = dayDiff;
-        textEl.innerHTML = `${esc(widget.dataset.manyDaysText || "days left.")}<span class="countdown-date">${esc(countdownNumberFact(dayDiff, widget))}</span>`;
+        textEl.textContent = widget.dataset.manyDaysText || "days left.";
         tagEl.textContent = widget.dataset.daysLeftTag || "Days left";
       } else if (dayDiff === 1) {
         daysEl.textContent = "1";
-        textEl.innerHTML = `${esc(widget.dataset.oneDayText || "day left.")}<span class="countdown-date">${esc(widget.dataset.tomorrowText || "Tomorrow ❤️")}</span>`;
+        textEl.textContent = widget.dataset.oneDayText || "day left.";
         tagEl.textContent = widget.dataset.almostShortTag || "Almost";
       } else if (dayDiff === 0) {
         daysEl.textContent = "0";
@@ -589,55 +582,6 @@
     const [year, month, day] = String(value || "").split("-").map(Number);
     if (!year || !month || !day) return null;
     return new Date(year, month - 1, day, 0, 0, 0);
-  }
-
-  function countdownNumberFact(number, widget) {
-    const n = Number(number);
-    const prefix = widget.dataset.funFactPrefix || "";
-    const fallback = widget.dataset.funFactFallback || "{n} is the number of days left in this tiny countdown adventure.";
-    let configuredFacts = {};
-
-    try {
-      configuredFacts = JSON.parse(widget.dataset.numberFunFacts || "{}");
-    } catch (error) {
-      configuredFacts = {};
-    }
-
-    const exactFact = configuredFacts[String(n)] || configuredFacts[n];
-    const body = replaceNumberToken(exactFact || automaticNumberFact(n) || fallback, n);
-    return prefix ? `${prefix} ${body}` : body;
-  }
-
-  function replaceNumberToken(text, number) {
-    return String(text || "").replace(/\{n\}/g, String(number));
-  }
-
-  function automaticNumberFact(n) {
-    if (!Number.isFinite(n) || n < 0) return "";
-    if (n === 1) return "1 is the loneliest little countdown number, but also the closest one.";
-
-    const sqrt = Math.sqrt(n);
-    if (Number.isInteger(sqrt)) return `${n} is a perfect square: ${sqrt} × ${sqrt}.`;
-
-    const power = Math.log2(n);
-    if (Number.isInteger(power)) return `${n} is a power of two: 2^${power}.`;
-
-    const triangularRoot = (Math.sqrt(8 * n + 1) - 1) / 2;
-    if (Number.isInteger(triangularRoot)) return `${n} is a triangular number, so it can be stacked into a neat dot triangle.`;
-
-    if (isPrime(n)) return `${n} is a prime number, divisible only by 1 and itself.`;
-    if (n % 2 === 0) return `${n} is even, so the remaining days still pair up nicely.`;
-    return `${n} is odd, so one tiny day gets to stand on its own.`;
-  }
-
-  function isPrime(n) {
-    if (!Number.isInteger(n) || n < 2) return false;
-    if (n === 2) return true;
-    if (n % 2 === 0) return false;
-    for (let i = 3; i * i <= n; i += 2) {
-      if (n % i === 0) return false;
-    }
-    return true;
   }
 
   function restoreChecks() {

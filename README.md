@@ -86,38 +86,8 @@ So duplicated `redFlags` cards no longer have to show the same list. Give each f
 Recipe cards use `class="mini-grid recipe-grid"`. The `.recipe-grid` CSS caps recipes at a maximum of four cards next to each other, while still wrapping responsively on smaller screens.
 
 
-## Countdown number fun facts
 
-Countdown cards no longer print the exact target date under the number. Instead, they show a configurable fun fact about the current number of days left.
 
-Edit the shared defaults in `assets/config.js`:
+## Countdown display
 
-```js
-ui: {
-  countdown: {
-    funFactPrefix: "Tiny number fact:",
-    funFactFallback: "{n} is the exact number of sleeps still waiting in this countdown.",
-    funFacts: {
-      "30": "30 is the number of days in April, June, September, and November.",
-      "32": "32 is 2⁵, a neat little power of two."
-    }
-  }
-}
-```
-
-You can also override or add facts per countdown source:
-
-```js
-content: {
-  countdowns: {
-    reunion: {
-      targetDate: "2026-06-30",
-      funFacts: {
-        "6": "6 is the smallest perfect number, because 1 + 2 + 3 = 6."
-      }
-    }
-  }
-}
-```
-
-Use `{n}` inside a fact if you want the current day number inserted automatically. If no custom fact exists for a number, the app generates a simple math-style fact automatically.
+Countdown cards show the large number, the configured countdown text, and the tags. They do not show the exact target date and they do not show number fun facts. Edit each countdown source under `content.countdowns` in `assets/config.js`.
