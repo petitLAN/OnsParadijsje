@@ -110,4 +110,4 @@ Open the website and click **Edit layout**. You can move, hide, remove, duplicat
 
 ## Font update
 
-This version uses Atkinson Hyperlegible for body text, Lilita One for h1/h2/h3/h4 headings, and Shrikhand for the countdown number and quick-action card titles. Category labels are kept in `config.js` for organization but are no longer displayed on the dashboard cards.
+This version uses Inter for body text, Inter for h1/h2/h3/h4 headings, and Inter for the countdown number and quick-action card titles. Category labels are kept in `config.js` for organization but are no longer displayed on the dashboard cards.
