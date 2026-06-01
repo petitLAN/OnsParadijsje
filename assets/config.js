@@ -15,11 +15,14 @@ window.HOUSE_CONFIG = {
       "editorToggle": "⚙️ Edit layout",
       "resetLayout": "↺ Reset layout",
       "downloadConfig": "⬇️ Download config.js",
+      "copyConfig": "📋 Copy config.js",
+      "copySuccess": "Copied config.js source to clipboard.",
+      "copyError": "Could not copy automatically. Your browser may block clipboard access here.",
       "note": "Local edits stay in this browser until you export the config."
     },
     "editor": {
       "title": "Interface frames",
-      "description": "Move, hide, remove, or replicate the cards. Use “Download config.js” afterwards to save your new order permanently.",
+      "description": "Move, hide, remove, or replicate the cards. Use “Download config.js” or “Copy config.js” afterwards to save your new order permanently.",
       "addFrame": "Add frame",
       "howTitle": "How this works",
       "howList": [
@@ -38,7 +41,7 @@ window.HOUSE_CONFIG = {
       "copySuffix": "copy",
       "customFramePlaceholder": "<p>A custom frame. Edit this in the exported config.</p>"
     },
-    "footerNote": "Binnenkort zullen we snel weer samen koffie drinken Poetsjiepoeh, mijn kleine poekie...!!!  <3  <3   c==3",
+    "footerNote": "Privacy reminder: do not publish exact away-dates, address, alarm codes, spare-key locations, or Wi‑Fi passwords on a public GitHub Pages site.",
     "countdown": {
       "initialText": "Counting down until we see each other again.",
       "dateTag": "30 June",
@@ -276,7 +279,7 @@ window.HOUSE_CONFIG = {
       "enabled": false
     },
     {
-      "id": "countdown-mpu0wep6",
+      "id": "countdown-mpu13kfj",
       "type": "countdown",
       "category": "Love",
       "title": "Countdown",

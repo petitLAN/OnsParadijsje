@@ -17,14 +17,17 @@
       <p class="small" id="siteHelper"></p>
     </section>
 
-    <section class="toolbar" id="toolbar" aria-label="Dashboard tools">
+    <section class="grid" id="dashboard" aria-live="polite"></section>
+
+    <section class="toolbar bottom-toolbar" id="toolbar" aria-label="Dashboard tools">
       <button id="editorToggle" type="button"></button>
       <button id="resetLayout" type="button"></button>
       <button id="downloadConfig" type="button"></button>
+      <button id="copyConfig" type="button"></button>
       <span class="toolbar-note" id="toolbarNote"></span>
     </section>
 
-    <section class="layout-editor" id="layoutEditor" hidden>
+    <section class="layout-editor bottom-layout-editor" id="layoutEditor" hidden>
       <div class="editor-panel">
         <h2 id="editorTitle"></h2>
         <p id="editorDescription"></p>
@@ -39,8 +42,6 @@
         <ol class="clean" id="howList"></ol>
       </div>
     </section>
-
-    <section class="grid" id="dashboard" aria-live="polite"></section>
 
     <footer class="site-footer" aria-label="Footer">
       <span class="footer-logo" aria-hidden="true"></span>

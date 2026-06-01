@@ -121,3 +121,6 @@ Reference splatter update: the logo splatters are now drawn inside the shared CS
 Content merge update: this version keeps the current app/CSS/logo implementation, but imports the older exported config's visible content and frame order. Older red-flag flat lists were converted into `content.redFlagLists` sources, and older checklist `limit` fields were removed so checklists remain unlimited.
 
 Logo micro-tweak: moved the large top-left pink splatter slightly inward so a little more yellow remains visible around the upper-left edge of the main circle.
+
+
+Configuration controls update: the layout/configuration buttons now sit below the dashboard just above the footer. A new `Copy config.js` button copies the generated config source to the clipboard, next to the existing download button.

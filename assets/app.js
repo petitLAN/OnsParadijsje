@@ -619,6 +619,38 @@
     URL.revokeObjectURL(link.href);
   }
 
+  async function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    textarea.style.top = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+    const ok = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    if (!ok) throw new Error("Fallback copy command failed");
+    return true;
+  }
+
+  function showToolbarMessage(message, restoreDelay = 2200) {
+    const note = document.getElementById("toolbarNote");
+    if (!note) return;
+    const original = ui.toolbar?.note || "";
+    note.textContent = message;
+    window.clearTimeout(showToolbarMessage.timer);
+    showToolbarMessage.timer = window.setTimeout(() => {
+      note.textContent = original;
+    }, restoreDelay);
+  }
+
   function setText(id, value) {
     const element = document.getElementById(id);
     if (element) element.textContent = value || "";
@@ -637,6 +669,7 @@
     setText("editorToggle", ui.toolbar?.editorToggle || "Edit layout");
     setText("resetLayout", ui.toolbar?.resetLayout || "Reset layout");
     setText("downloadConfig", ui.toolbar?.downloadConfig || "Download config.js");
+    setText("copyConfig", ui.toolbar?.copyConfig || "Copy config.js");
     setText("toolbarNote", ui.toolbar?.note || "");
 
     setText("editorTitle", ui.editor?.title || "Interface frames");
@@ -664,6 +697,19 @@
     });
 
     document.getElementById("downloadConfig").addEventListener("click", () => download("config.js", buildConfigFile()));
+
+    const copyButton = document.getElementById("copyConfig");
+    if (copyButton) {
+      copyButton.addEventListener("click", async () => {
+        try {
+          await copyToClipboard(buildConfigFile());
+          showToolbarMessage(ui.toolbar?.copySuccess || "Copied config.js source to clipboard.");
+        } catch (error) {
+          console.error(error);
+          showToolbarMessage(ui.toolbar?.copyError || "Could not copy config.js automatically.", 3600);
+        }
+      });
+    }
 
     document.getElementById("addFrame").addEventListener("click", () => addFrame(newFrameType.value));
 

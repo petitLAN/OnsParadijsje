@@ -324,3 +324,12 @@ p{color:var(--cream);line-height:1.58;font-weight:750}.small{font-size:13px}.tin
     margin-right:-18px;
   }
 }
+
+
+/* Bottom configuration area */
+.bottom-toolbar{
+  margin:34px 0 22px;
+}
+.bottom-layout-editor{
+  margin-bottom:28px;
+}
