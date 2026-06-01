@@ -90,8 +90,3 @@ On mobile, all cards automatically become full-width.
 ## Browser layout editor
 
 Open the website and click **Edit layout**. You can move, hide, remove, duplicate, add, and resize frames from the page itself. These edits are stored in your browser. Use **Download config.js** to export the changed layout permanently, then replace `assets/config.js` in your GitHub Pages folder.
-
-## Oversized titles
-
-Long single-line titles are intentionally allowed to stay large and unwrapped. The card itself clips overflowing title text at its border, so a title can visually feel oversized without spilling behind the next grid card.
-

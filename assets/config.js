@@ -94,7 +94,7 @@ window.HOUSE_CONFIG = {
     { id: "countdown-main", category: "Love", tag: "Poetsjiepoeh", type: "countdown", title: "Countdown", width: "span-4", enabled: true, targetDate: "2026-06-30" },
     { id: "daily-first", category: "Today", tag: "Checkcheck", type: "checklist", title: "Do these first", width: "span-8", enabled: true, source: "daily", limit: 5 },
     { id: "consistency", category: "House rhythm", tag: "Huisvrouw ü", type: "consistency", title: "Consistency levels", width: "span-5", enabled: true },
-    { id: "laundry", category: "Instructions", tag: "Instructions de machine lávier", type: "laundry", title: "wasnadatwaswas", width: "span-4", enabled: true },
+    { id: "laundry", category: "Instructions", tag: "Instructions de machine lávier", type: "laundry", title: "wasnadatwaswas", titleMode: "clip", width: "span-4", enabled: true },
     { id: "red-flags", category: "Shopping", tag: "Shopping...", type: "redFlags", title: "Always check these in stock", width: "span-3", enabled: true },
     { id: "recipes", category: "Food", tag: "Fast Food", type: "recipes", title: "Easy food recipes", width: "span-12", enabled: true },
     { id: "quick-actions", category: "Notes", tag: "Brainfarts", type: "quickActions", title: "Short Notes", width: "span-12", enabled: true },

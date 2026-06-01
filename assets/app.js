@@ -66,7 +66,8 @@
 
   function renderShell(frame, body, typeLabel) {
     const article = document.createElement("article");
-    article.className = `card frame-card ${frame.width || "span-4"} ${frame.type === "countdown" ? "countdown-card" : ""}`;
+    const titleModeClass = frame.titleMode === "clip" ? "title-clip" : "";
+    article.className = `card frame-card ${frame.width || "span-4"} ${frame.type === "countdown" ? "countdown-card" : ""} ${titleModeClass}`;
     article.id = slug(frame.id);
     article.dataset.frameId = frame.id;
     const tagLabel = frame.tag || frame.handle || frame.category || typeLabel || FRAME_TYPES[frame.type] || frame.type;
