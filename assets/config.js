@@ -1,133 +1,202 @@
 /*
-  Ons Paradijsje dashboard content and layout
-  -------------------------------------------
-  This is the only file you normally edit.
+  Ons Paradijsje modular dashboard config
+  --------------------------------------
+  The site reads this file and builds the dashboard automatically.
 
-  Add/shuffle cards:
-  - Reorder objects in DASHBOARD_CONFIG.layout.
-  - Duplicate a layout object and give it a new id.
-  - Set span to 3, 4, 5, 6, 7, 8, or 12.
-  - Set enabled: false to hide a card without deleting it.
+  Main edit points:
+  - meta: title, hero text, countdown target.
+  - ui: button labels, editor copy, footer note, countdown wording.
+  - layout: order, card title, card tag/handle, width, type, enabled state.
+  - content: checklist text, note-card text, recipes, laundry, rooms, etc.
 
-  Edit text:
-  - All visible words live inside DASHBOARD_CONFIG.content.
-  - Tags/labels are just strings, so every imported card can have its own custom title.
-
-  No cards have click actions. The site only renders static UI from this config.
+  To reshuffle cards: reorder the objects inside layout.
+  To hide cards: set enabled: false.
+  To replicate cards: copy a layout object and give it a new id.
+  To change card width: use span-3, span-4, span-5, span-6, span-7, span-8, or span-12.
+  To customize the visible pill/tag on each card: edit the frame's tag value.
 */
-window.DASHBOARD_CONFIG = {
+window.HOUSE_CONFIG = {
   meta: {
+    documentTitle: "Ons Paradijsje — Modular Dashboard",
     title: "Ons Paradijsje",
-    heroLabel: "Modular house dashboard",
     subtitle: "Eat. Sleep. Janken. Repeat. Althans, totdat ik weer terugkom om jouw huisvrouwtje te zijn.",
     greeting: "Hallow Poetsjiepoeh c3 dit zijn niet per se de huisregels, gewoon een uitgebreide todo lijst wat ik zoal doe als jij druk geld verdient. Of soms ook niet doe...",
-    seal: "Ons Paradijsje",
-    footer: "Privacy reminder: do not publish exact away-dates, address, alarm codes, spare-key locations, or Wi‑Fi passwords on a public GitHub Pages site."
+    helper: "",
+    heroLabel: "Modular house dashboard",
+    countdownTarget: "2026-06-30"
+  },
+
+  ui: {
+    toolbar: {
+      ariaLabel: "Dashboard tools",
+      editorToggle: "⚙️ Edit layout",
+      resetLayout: "↺ Reset layout",
+      downloadConfig: "⬇️ Download config.js",
+      note: "Local edits stay in this browser until you export the config."
+    },
+    editor: {
+      title: "Interface frames",
+      description: "Move, hide, remove, or replicate the cards. Use “Download config.js” afterwards to save your new order permanently.",
+      addFrame: "Add frame",
+      howTitle: "How this works",
+      howList: [
+        "Each card is one frame object in the layout array.",
+        "Replicating a card creates a new frame with the same type and content.",
+        "Changing width controls its grid span: span-3, span-4, span-5, span-6, span-7, span-8, or span-12.",
+        "All visible card titles, tags, and content live in assets/config.js."
+      ],
+      resetConfirm: "Reset the layout to the default config order?",
+      hiddenLabel: "hidden",
+      visibleLabel: "visible",
+      showLabel: "Show",
+      hideLabel: "Hide",
+      duplicateLabel: "Duplicate",
+      removeLabel: "Remove",
+      copySuffix: "copy",
+      customFramePlaceholder: "<p>A custom frame. Edit this in the exported config.</p>"
+    },
+    footerNote: "Privacy reminder: do not publish exact away-dates, address, alarm codes, spare-key locations, or Wi‑Fi passwords on a public GitHub Pages site.",
+    countdown: {
+      initialText: "Counting down until we see each other again.",
+      dateTag: "30 June",
+      almostTag: "Almost there",
+      manyDaysText: "days until we see each other again.",
+      targetPrefix: "Target:",
+      daysLeftTag: "Days left",
+      oneDayText: "day until we see each other again.",
+      tomorrowText: "Tomorrow ❤️",
+      almostShortTag: "Almost",
+      todayText: "days left. Today is the day we see each other again ❤️",
+      todayTag: "Today",
+      completeText: "The countdown is complete. We saw each other again ❤️",
+      completeTag: "Complete"
+    }
+  },
+
+  frameTypes: {
+    countdown: "Countdown",
+    checklist: "Checklist",
+    consistency: "Consistency levels",
+    laundry: "Laundry guide",
+    redFlags: "Red flags",
+    recipes: "Recipes",
+    quickActions: "Note cards",
+    dailySop: "Daily SOP",
+    decisionMatrix: "Decision matrix",
+    rooms: "Room map",
+    dayflow: "Dayflow",
+    kanban: "Kanban",
+    notes: "Notes",
+    customHtml: "Custom HTML"
   },
 
   layout: [
-    { id: "countdown", type: "countdown", span: 4, content: "countdown", enabled: true },
-    { id: "do-first", type: "checklist", span: 8, content: "doFirst", enabled: true },
-    { id: "consistency", type: "levels", span: 5, content: "consistency", enabled: true },
-    { id: "laundry", type: "laundry", span: 4, content: "laundry", enabled: true },
-    { id: "shopping", type: "stock", span: 3, content: "shopping", enabled: true },
-    { id: "recipes", type: "recipes", span: 12, content: "recipes", enabled: true },
-    { id: "notes", type: "notes", span: 12, content: "notes", enabled: true },
-    { id: "daily-sop", type: "sop", span: 6, content: "dailySop", enabled: true },
-    { id: "decisions", type: "matrix", span: 6, content: "decisions", enabled: true }
+    { id: "countdown-main", category: "Love", tag: "Poetsjiepoeh", type: "countdown", title: "Countdown", width: "span-4", enabled: true, targetDate: "2026-06-30" },
+    { id: "daily-first", category: "Today", tag: "Checkcheck", type: "checklist", title: "Do these first", width: "span-8", enabled: true, source: "daily", limit: 5 },
+    { id: "consistency", category: "House rhythm", tag: "Huisvrouw ü", type: "consistency", title: "Consistency levels", width: "span-5", enabled: true },
+    { id: "laundry", category: "Instructions", tag: "Instructions de machine lávier", type: "laundry", title: "wasnadatwaswas", width: "span-4", enabled: true },
+    { id: "red-flags", category: "Shopping", tag: "Shopping...", type: "redFlags", title: "Always check these in stock", width: "span-3", enabled: true },
+    { id: "recipes", category: "Food", tag: "Fast Food", type: "recipes", title: "Easy food recipes", width: "span-12", enabled: true },
+    { id: "quick-actions", category: "Notes", tag: "Brainfarts", type: "quickActions", title: "Short Notes", width: "span-12", enabled: true },
+    { id: "daily-sop", category: "Routine", tag: "procedure", type: "dailySop", title: "Daily SOP", width: "span-6", enabled: true, source: "dailySop" },
+    { id: "decision-matrix", category: "Decisions", tag: "Priorities", type: "decisionMatrix", title: "Decisionssss", width: "span-6", enabled: true },
+
+    /* Extra frames are included but disabled, so you can enable/copy them later. */
+    { id: "rooms", category: "Rooms", tag: "Rooms", type: "rooms", title: "Room map", width: "span-12", enabled: false },
+    { id: "dayflow", category: "Routine", tag: "Routine", type: "dayflow", title: "Dayflow", width: "span-12", enabled: false },
+    { id: "kanban", category: "Routine", tag: "Routine", type: "kanban", title: "Routine Kanban", width: "span-12", enabled: false },
+    { id: "sweet-notes", category: "Love", tag: "Love", type: "notes", title: "Little notes", width: "span-6", enabled: false }
   ],
 
   content: {
-    countdown: {
-      label: "Poetsjiepoeh",
-      title: "Countdown",
-      targetDate: "2026-06-30",
-      manualDays: 33,
-      text: "days until ü n me ish ushj",
-      target: "Target: pretsjul & phoekie",
-      chips: ["Days left", "Almost there"]
+    daily: [
+      "Open curtains and air the bedroom for 10 minutes.",
+      "Keep the kitchen counter clear before bed.",
+      "Check dishwasher: start it or empty it if needed.",
+      "Make sure laundry is not forgotten in the washing machine.",
+      "Lock the front door before sleeping."
+    ],
+
+    dailySop: [
+      "Open curtains and air the bedroom for 10 minutes.",
+      "Keep the kitchen counter clear before bed.",
+      "Check dishwasher: start it or empty it if needed.",
+      "Make sure laundry is not forgotten in the washing machine.",
+      "Lock the front door before sleeping."
+    ],
+
+    everyFewDays: [
+      "Take out trash before it becomes a creature.",
+      "Swap damp bathroom towels.",
+      "Check plants only if soil feels dry.",
+      "Vacuum main walking areas if crumbs appear."
+    ],
+
+    weekly: [
+      "Wash towels and bedding if needed.",
+      "Clean bathroom sink and mirror.",
+      "Check fridge for food that should be used soon.",
+      "Put things back in their normal spots."
+    ],
+
+    consistencies: [
+      { title: "Kitchen baseline", detail: "Counter clear, sink not full, dishwasher handled before bed.", score: 90 },
+      { title: "Laundry rhythm", detail: "Better one small load than a scary mountain later.", score: 75 },
+      { title: "Fresh air", detail: "Short airing moments are enough; do not leave windows open all day.", score: 70 },
+      { title: "Calm house rule", detail: "If something smells weird, looks wet, or beeps: investigate sooner.", score: 95 }
+    ],
+
+    laundry: [
+      { load: "Normal clothes", temp: "30–40°C", detergent: "Normal detergent", avoid: "Avoid mixing bright colors with whites." },
+      { load: "Towels", temp: "60°C", detergent: "Normal detergent", avoid: "Do not overload; towels need space." },
+      { load: "Delicates / nice shirts", temp: "30°C gentle", detergent: "Small amount", avoid: "Do not tumble dry unless label says yes." },
+      { load: "Bedding", temp: "40–60°C", detergent: "Normal detergent", avoid: "Dry fully before putting away." }
+    ],
+
+    recipes: [
+      { name: "Pasta pesto comfort bowl", time: "15 min", ingredients: ["Pasta", "Pesto", "Tomatoes", "Cheese"], steps: ["Boil pasta.", "Save a spoon of pasta water.", "Mix pesto and pasta water.", "Add tomatoes and cheese."], note: "Impossible to ruin, almost." },
+      { name: "Rice bowl", time: "20 min", ingredients: ["Rice", "Egg or tofu", "Vegetables", "Soy sauce"], steps: ["Cook rice.", "Fry vegetables.", "Add protein.", "Finish with sauce."], note: "Good fridge-cleaning meal." },
+      { name: "Oven wraps", time: "18 min", ingredients: ["Wraps", "Cheese", "Beans/chicken", "Vegetables"], steps: ["Fill wraps.", "Fold and place in oven dish.", "Bake until warm and crispy."], note: "Very good lazy dinner." }
+    ],
+
+    quickActions: [
+      { title: "I need to do laundry", emoji: "🧺", description: "Please keep the clean and dirty pile separate" },
+      { title: "I need food", emoji: "🍝", description: "No, tuna with rice is not an option" },
+      { title: "I should clean", emoji: "🧽", description: "Also your feet...! And you, go in the shower" },
+      { title: "Something is weird", emoji: "🆘", description: "Jij stinkt. En kook met het brandalarm a.u.b." }
+    ],
+
+    shoppingStock: [
+      "Muesli",
+      "Yoghurt",
+      "Coffee",
+      "You feel overwhelmed"
+    ],
+
+    troubleshooting: [
+      { problem: "Laundry smells damp", fix: "Rewash it. Do not let it dry halfway in a pile." },
+      { problem: "Kitchen smells weird", fix: "Check trash, sink, dishwasher filter area, and old food." },
+      { problem: "Plant looks sad", fix: "Check soil first. Dry soil: small water. Wet soil: leave it alone." },
+      { problem: "You feel overwhelmed", fix: "Do only kitchen counter, trash, and laundry-machine check. That already helps." }
+    ],
+
+    decisionMatrix: {
+      doNow: ["Wet laundry", "Weird smell", "Unlocked door", "Overflowing trash"],
+      canWait: ["Vacuum if not dirty", "Deep cleaning", "Fancy cooking", "Perfect organization"]
     },
 
-    doFirst: {
-      label: "Checkcheck",
-      title: "Do these first",
-      items: [
-        "Open curtains and air the bedroom for 10 minutes.",
-        "Keep the kitchen counter clear before bed.",
-        "Check dishwasher: start it or empty it if needed.",
-        "Make sure laundry is not forgotten in the washing machine.",
-        "Lock the front door before sleeping."
-      ]
-    },
+    rooms: [
+      { name: "Kitchen", emoji: "🍳", status: "Needs nightly reset", notes: ["Wipe the counter after cooking.", "Food scraps go in the right bin.", "Do not leave pans soaking forever."] },
+      { name: "Bathroom", emoji: "🛁", status: "Watch towels", notes: ["Hang towels open so they dry.", "Quickly rinse toothpaste marks.", "Replace toilet paper before it becomes a quest."] },
+      { name: "Bedroom", emoji: "🛏️", status: "Air briefly", notes: ["Air briefly in the morning.", "Keep laundry off the floor if possible.", "Close windows before leaving."] },
+      { name: "Living room", emoji: "🛋️", status: "Cozy but not chaotic", notes: ["Cups return to the kitchen.", "Blankets can be cozy, but not chaotic.", "Vacuum if crumbs happen."] }
+    ],
 
-    consistency: {
-      label: "Huisvrouw ü",
-      title: "Consistency levels",
-      items: [
-        { title: "Kitchen baseline", detail: "Counter clear, sink not full, dishwasher handled before bed.", score: 90 },
-        { title: "Laundry rhythm", detail: "Better one small load than a scary mountain later.", score: 75 },
-        { title: "Fresh air", detail: "Short airing moments are enough; do not leave windows open all day.", score: 70 },
-        { title: "Calm house rule", detail: "If something smells weird, looks wet, or beeps: investigate sooner.", score: 95 }
-      ]
-    },
-
-    laundry: {
-      label: "Instructions de machine lávier",
-      title: "Wasnadatwas",
-      items: [
-        "Normal clothes — 30–40°C",
-        "Towels — 60°C",
-        "Delicates / nice shirts — 30°C gentle",
-        "Bedding — 40–60°C"
-      ]
-    },
-
-    shopping: {
-      label: "Shopping...",
-      title: "Always check these in stock",
-      items: ["Muesli", "Yoghurt", "Coffee", "You feel overwhelmed"]
-    },
-
-    recipes: {
-      label: "Fast food",
-      title: "Easy food recipes",
-      items: [
-        { name: "Pasta pesto comfort bowl", time: "15 min", ingredients: "Pasta, Pesto, Tomatoes, Cheese", stepsLabel: "Steps" },
-        { name: "Rice bowl", time: "20 min", ingredients: "Rice, Egg or tofu, Vegetables, Soy sauce", stepsLabel: "Steps" },
-        { name: "Oven wraps", time: "18 min", ingredients: "Wraps, Cheese, Beans/chicken, Vegetables", stepsLabel: "Steps" }
-      ]
-    },
-
-    notes: {
-      label: "Brainfarts",
-      title: "Short notes",
-      items: [
-        { tone: "hot", icon: "🧺", title: "I need to do laundry", text: "Please keep the clean and dirty pile separate" },
-        { tone: "calm", icon: "🍝", title: "I need food", text: "No, tuna with rice is not an option" },
-        { tone: "hot", icon: "🧽", title: "I should clean", text: "Also your feet...! And you, go in the shower" },
-        { tone: "calm", icon: "🆘", title: "Something is weird", text: "Jij stinkt. En kook met het brandalarm a.u.b." }
-      ]
-    },
-
-    dailySop: {
-      label: "Procedure",
-      title: "Daily SOP",
-      items: [
-        "Open curtains and air the bedroom for 10 minutes.",
-        "Keep the kitchen counter clear before bed.",
-        "Check dishwasher: start it or empty it if needed.",
-        "Make sure laundry is not forgotten in the washing machine.",
-        "Lock the front door before sleeping."
-      ]
-    },
-
-    decisions: {
-      label: "Priorities",
-      title: "Decisionssss",
-      columns: [
-        { label: "Urgent", title: "Do now", items: ["Wet laundry", "Weird smell", "Unlocked door", "Overflowing trash"] },
-        { label: "Optional", title: "Can wait", items: ["Vacuum if not dirty", "Deep cleaning", "Fancy cooking", "Perfect organization"] }
-      ]
-    }
+    sweetNotes: [
+      "You do not need to do everything perfectly.",
+      "Future me will be very happy if the laundry machine is empty.",
+      "Coffee is allowed. Chaos is negotiable. Mold is not.",
+      "Thank you for taking care of our home ❤️"
+    ]
   }
 };
