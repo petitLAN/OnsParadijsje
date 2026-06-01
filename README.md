@@ -106,3 +106,8 @@ On mobile, all cards automatically become full-width.
 ## Browser layout editor
 
 Open the website and click **Edit layout**. You can move, hide, remove, duplicate, add, and resize frames from the page itself. These edits are stored in your browser. Use **Download config.js** to export the changed layout permanently, then replace `assets/config.js` in your GitHub Pages folder.
+
+
+## Font update
+
+This version uses Atkinson Hyperlegible for body text, Lilita One for h1/h2/h3/h4 headings, and Shrikhand for the countdown number and quick-action card titles. Category labels are kept in `config.js` for organization but are no longer displayed on the dashboard cards.

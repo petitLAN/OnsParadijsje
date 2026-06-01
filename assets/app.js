@@ -66,11 +66,10 @@
     article.className = `card frame-card ${frame.width || "span-4"} ${frame.type === "countdown" ? "countdown-card" : ""}`;
     article.id = slug(frame.id);
     article.dataset.frameId = frame.id;
-    const categoryTag = frame.category ? `<span class="tag category-tag">${esc(frame.category)}</span>` : "";
     article.innerHTML = `
       <div class="frame-card-head">
         <div>
-          <div class="frame-tags"><span class="tag blue">${esc(typeLabel || FRAME_TYPES[frame.type] || frame.type)}</span>${categoryTag}</div>
+          <div class="frame-tags"><span class="tag blue">${esc(typeLabel || FRAME_TYPES[frame.type] || frame.type)}</span></div>
           <h2>${esc(frame.title || FRAME_TYPES[frame.type] || "Frame")}</h2>
         </div>
         <span class="frame-handle" title="Frame module">▦</span>
