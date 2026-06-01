@@ -1,68 +1,18 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ons Paradijsje — Modular Dashboard</title>
-  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
   <main class="page">
-    <section class="hero" id="hero">
-      <span class="tag blue" id="heroLabel">Modular house dashboard</span>
-      <h1 id="siteTitle">Ons Paradijsje</h1>
-      <p id="siteSubtitle">Sip. Savor. Score. A bold little dashboard for keeping the house playful, clean, and under control.</p>
-      <p><strong id="siteGreeting">Hi love — this is not a rulebook, just the little things that keep the house feeling like home.</strong></p>
-      <p class="small"><strong>Modular mode:</strong> cards are rendered from <code>assets/config.js</code>. Reorder, remove, duplicate, or add frames without touching the layout HTML.</p>
-    </section>
-
-    <section class="toolbar" aria-label="Dashboard tools">
-      <button id="editorToggle" type="button">⚙️ Edit layout</button>
-      <button id="resetLayout" type="button">↺ Reset layout</button>
-      <button id="downloadConfig" type="button">⬇️ Download config.js</button>
-      <span class="toolbar-note">Local edits stay in this browser until you export the config.</span>
-    </section>
-
-    <section class="layout-editor" id="layoutEditor" hidden>
-      <div class="editor-panel">
-        <h2>Interface frames</h2>
-        <p>Move, hide, remove, or replicate the cards. Use “Download config.js” afterwards to save your new order permanently.</p>
-        <div id="frameList" class="frame-list"></div>
-        <div class="add-row">
-          <select id="newFrameType" aria-label="Frame type to add"></select>
-          <button id="addFrame" type="button">Add frame</button>
-        </div>
-      </div>
-      <div class="editor-panel">
-        <h2>How this works</h2>
-        <ol class="clean">
-          <li>Each card is one frame object in the <code>layout</code> array.</li>
-          <li>Replicating a card creates a new frame with the same type and content.</li>
-          <li>Changing <code>width</code> controls its grid span: <code>span-3</code>, <code>span-4</code>, <code>span-6</code>, <code>span-8</code>, or <code>span-12</code>.</li>
-          <li>Each frame can have its own editable <code>tag</code> and <code>title</code>.</li>
-          <li>All reusable text/data lives in the <code>content</code> block.</li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="grid" id="dashboard" aria-live="polite"></section>
-
-    <p class="footer-note">Privacy reminder: do not publish exact away-dates, address, alarm codes, spare-key locations, or Wi‑Fi passwords on a public GitHub Pages site.</p>
+    <section id="dashboard" class="dashboard" aria-label="Ons Paradijsje dashboard"></section>
   </main>
 
-  <template id="cardTemplate">
-    <article class="card frame-card">
-      <div class="frame-card-head">
-        <div>
-          <span class="tag frame-tag"></span>
-          <h2 class="frame-title"></h2>
-        </div>
-      </div>
-      <div class="frame-body"></div>
-    </article>
-  </template>
-
-  <script src="assets/config.js"></script>
+  <!-- Edit assets/content.js to change text, add cards, remove cards, or shuffle card order. -->
+  <script src="assets/content.js"></script>
   <script src="assets/app.js"></script>
 </body>
 </html>
