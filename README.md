@@ -124,3 +124,11 @@ Logo micro-tweak: moved the large top-left pink splatter slightly inward so a li
 
 
 Configuration controls update: the layout/configuration buttons now sit below the dashboard just above the footer. A new `Copy config.js` button copies the generated config source to the clipboard, next to the existing download button.
+
+
+Hero logo overlap update: added a responsive overlap-safe mode. When the hero logo would sit behind the title/text, it now becomes smaller and dimmer instead of staying bright and competing with the yellow/pink heading.
+
+
+Hero logo threshold update: tightened the overlap-safe breakpoint from 1280px to 1160px, so the logo returns to the bright/full version earlier and the dimmed mode is closer to the actual overlap zone.
+
+Hero logo threshold retune: added a softer transition zone at 1240px and kept a stronger overlap-safe mode at 1160px. This avoids the logo becoming fully bright while overlap is still happening, without returning to the overly conservative 1280px behavior.

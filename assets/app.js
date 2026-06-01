@@ -10,7 +10,7 @@
   const DEFAULT_FRAME_TYPES = {
     countdown: "Countdown",
     checklist: "Checklist",
-    consistency: "Consistency levels",
+    consistency: "Schoonmaken",
     laundry: "Laundry guide",
     redFlags: "Red flags",
     recipes: "Recipes",
@@ -196,8 +196,8 @@
     const html = (config.content.laundry || []).map(item => `
       <details>
         <summary>${esc(item.load)} — ${esc(item.temp)}</summary>
-        <p><strong>Detergent:</strong> ${esc(item.detergent)}</p>
-        <p><strong>Avoid:</strong> ${esc(item.avoid)}</p>
+        <p><strong>Was spul:</strong> ${esc(item.detergent)}</p>
+        <p><strong>Let op!</strong> ${esc(item.avoid)}</p>
       </details>
     `).join("");
     return renderShell(frame, html, "instruction frame");

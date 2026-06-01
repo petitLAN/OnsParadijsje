@@ -1,4 +1,21 @@
-/* Exported from Ons Paradijsje modular dashboard */
+/*
+  Ons Paradijsje modular dashboard config
+  --------------------------------------
+  This config keeps the current dashboard logic, but imports the visible content,
+  frame order, widths, titles, tags, and enabled/hidden state from the older
+  exported config provided by the user.
+
+  Main edit points:
+  - meta: title and hero text.
+  - ui: button labels, editor copy, footer note, and countdown wording.
+  - layout: order, card title, card tag, width, type, enabled state, and source.
+  - content: checklist text, countdown data, note-card text, recipes, laundry,
+    red-flag lists, rooms, decision matrices, etc.
+
+  Decision matrix and red-flag cards are source-driven: add a content block under
+  content.decisionMatrices or content.redFlagLists, then point a frame's source
+  to that key.
+*/
 window.HOUSE_CONFIG = {
   "meta": {
     "documentTitle": "Ons Paradijsje — Modular Dashboard",
@@ -41,7 +58,7 @@ window.HOUSE_CONFIG = {
       "copySuffix": "copy",
       "customFramePlaceholder": "<p>A custom frame. Edit this in the exported config.</p>"
     },
-    "footerNote": "Privacy reminder: do not publish exact away-dates, address, alarm codes, spare-key locations, or Wi‑Fi passwords on a public GitHub Pages site.",
+    "footerNote": "Binnenkort zullen we snel weer koffie saampies drinken, Poetsjiepoeh. MWAH, hou je taai Poekie! <3 <3  c==3",
     "countdown": {
       "initialText": "Counting down until we see each other again.",
       "dateTag": "30 June",
@@ -61,7 +78,7 @@ window.HOUSE_CONFIG = {
   "frameTypes": {
     "countdown": "Countdown",
     "checklist": "Checklist",
-    "consistency": "Consistency levels",
+    "consistency": "Schoonmaken",
     "laundry": "Laundry guide",
     "redFlags": "Red flags",
     "recipes": "Recipes",
@@ -110,14 +127,14 @@ window.HOUSE_CONFIG = {
       "category": "House rhythm",
       "tag": "Huisvrouw ü",
       "type": "consistency",
-      "title": "Consistency levels",
+      "title": "Schoonmaken",
       "width": "span-5",
       "enabled": true
     },
     {
       "id": "laundry",
       "category": "Instructions",
-      "tag": "Instructions de machine lávier",
+      "tag": "Instructions de la machine à láver",
       "type": "laundry",
       "title": "wasnadatwaswas",
       "titleMode": "clip",
@@ -189,7 +206,7 @@ window.HOUSE_CONFIG = {
       "type": "decisionMatrix",
       "title": "Decisionssss",
       "width": "span-12",
-      "enabled": false,
+      "enabled": true,
       "source": "housePriorities"
     },
     {
@@ -277,15 +294,6 @@ window.HOUSE_CONFIG = {
       "title": "Little notes",
       "width": "span-6",
       "enabled": false
-    },
-    {
-      "id": "countdown-mpu13kfj",
-      "type": "countdown",
-      "category": "Love",
-      "title": "Countdown",
-      "width": "span-4",
-      "enabled": true,
-      "source": "reunion"
     }
   ],
   "content": {
@@ -361,38 +369,43 @@ window.HOUSE_CONFIG = {
     ],
     "consistencies": [
       {
-        "title": "Kitchen baseline",
-        "detail": "Counter clear, sink not full, dishwasher handled before bed.",
+        "title": "Stofzuigen",
+        "detail": "Ook de restjes op de bank. VOORAL de restjes in de bank...",
         "score": 90
       },
       {
-        "title": "Laundry rhythm",
-        "detail": "Better one small load than a scary mountain later.",
-        "score": 75
+        "title": "WC",
+        "detail": "Je weet hoe het gaat.",
+        "score": 90
       },
       {
-        "title": "Fresh air",
-        "detail": "Short airing moments are enough; do not leave windows open all day.",
+        "title": "Kleding Wassen",
+        "detail": "Liefst om de dag iets, doe ik ook altijd... ... Zei je iets?",
         "score": 70
       },
       {
-        "title": "Calm house rule",
-        "detail": "If something smells weird, looks wet, or beeps: investigate sooner.",
-        "score": 95
+        "title": "Beddengoed wassen",
+        "detail": "Liefst om de twee weken. Vooral in de zomer! De warme temperaturen.",
+        "score": 50
+      },
+      {
+        "title": "Wasmachine wassen",
+        "detail": "Doe ik vaak eens per maand, omdat de was begint te stinken. 3 Schepjes percarbonaat in de trommel doen en dan 'Nettoyage Tambour' draaien",
+        "score": 25
       }
     ],
     "laundry": [
       {
-        "load": "Normal clothes",
-        "temp": "30–40°C",
-        "detergent": "Normal detergent",
-        "avoid": "Avoid mixing bright colors with whites."
+        "load": "Witte Was",
+        "temp": "30°C",
+        "detergent": "Robijn wit, links onder in het kastje",
+        "avoid": "Bewerk je oksels wel eerst met een TANDENBORSTEL, want dan schrub je de magnesium van je deo en jouw zweet er uit. LET OP 2! Alleen drogen op het wasrek...!"
       },
       {
-        "load": "Towels",
-        "temp": "60°C",
-        "detergent": "Normal detergent",
-        "avoid": "Do not overload; towels need space."
+        "load": "Nigg../Gekleurd/Spijkerbroeken",
+        "temp": "30-40°C",
+        "detergent": "Arial Black/Revita Black, links boven in het kastje",
+        "avoid": "Nigg... In het waslabel staat welke temperatuur het aan kan."
       },
       {
         "load": "Delicates / nice shirts",
@@ -574,6 +587,22 @@ window.HOUSE_CONFIG = {
       {
         "name": "Broccoli schotel",
         "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Bobotie ",
+        "time": "45 min",
         "ingredients": [
           "Eggs",
           "Butter",
