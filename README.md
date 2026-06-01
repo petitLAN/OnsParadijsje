@@ -16,6 +16,7 @@ This version is built so the dashboard is made from reusable **interface frames*
 - The old frame handle symbol has been removed from rendered cards. A defensive CSS rule also hides it if an older exported card still contains it.
 - The old quick-action buttons are now decorative note cards. They keep the same chunky button-like visual style, but they are rendered as `<article>` cards instead of links, so they no longer scroll or navigate anywhere.
 - Static text from `index.html` has been moved into the `ui` block in `assets/config.js` where practical.
+- Countdown event data now lives in `content.countdowns`, and each countdown card can point to a different event using `source`.
 
 ## Editing card tags and titles
 
@@ -30,6 +31,43 @@ Each card is one object in the `layout` array:
 - `category` is mostly organizational and shown in the layout editor.
 - `width` controls the grid span.
 - `enabled: false` hides the frame without deleting it.
+
+
+## Countdown cards
+
+Countdowns are editable in `assets/config.js`. The actual event data lives in `content.countdowns`:
+
+```js
+countdowns: {
+  reunion: {
+    targetDate: "2026-06-30",
+    manyDaysText: "days until we see each other again.",
+    todayText: "Today is the day we see each other again ❤️",
+    completeText: "The countdown is complete. We saw each other again ❤️"
+  },
+  birthday: {
+    targetDate: "2026-07-21",
+    manyDaysText: "days until birthday time.",
+    todayText: "Birthday day ❤️"
+  }
+}
+```
+
+A countdown card in the `layout` array points to one of those events with `source`:
+
+```js
+{ id: "birthday-countdown", type: "countdown", tag: "Birthday", title: "Birthday countdown", width: "span-4", enabled: true, source: "birthday" }
+```
+
+So yes, you can scatter several countdowns through the interface: add several `type: "countdown"` frames with different `id` and `source` values. You can also keep using the older direct style if you want:
+
+```js
+{ id: "simple-countdown", type: "countdown", title: "Simple countdown", targetDate: "2026-09-01", enabled: true }
+```
+
+Dates should be written as `YYYY-MM-DD`.
+
+Important: the browser layout editor stores layout edits in `localStorage`. If you change the `layout` array in `config.js` and do not see the change, click **Reset layout** once or clear the site data, because the browser may still be using an older saved layout.
 
 ## Note cards
 

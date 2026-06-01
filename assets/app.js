@@ -83,13 +83,31 @@
   }
 
   function renderCountdown(frame) {
-    const targetDate = frame.targetDate || config.meta.countdownTarget;
-    const countdownUi = ui.countdown || {};
+    const countdownLibrary = config.content?.countdowns || {};
+    const countdownFromSource = frame.source ? (countdownLibrary[frame.source] || {}) : {};
+    const countdownData = { ...countdownFromSource, ...(frame.countdown || {}) };
+    const countdownCopy = { ...(ui.countdown || {}), ...countdownData };
+    const targetDate = frame.targetDate || countdownData.targetDate || config.meta.countdownTarget;
     return renderShell(frame, `
-      <div class="big-number" data-countdown-days data-target-date="${esc(targetDate)}">--</div>
-      <p data-countdown-text>${esc(countdownUi.initialText || "Counting down until we see each other again.")}</p>
-      <span class="tag ok" data-countdown-tag>${esc(countdownUi.dateTag || "30 June")}</span><span class="tag warn">${esc(countdownUi.almostTag || "Almost there")}</span>
-    `, "dynamic frame");
+      <div class="countdown-widget"
+        data-countdown-widget
+        data-target-date="${esc(targetDate)}"
+        data-initial-text="${esc(countdownCopy.initialText || "Counting down.")}"
+        data-many-days-text="${esc(countdownCopy.manyDaysText || "days left.")}"
+        data-target-prefix="${esc(countdownCopy.targetPrefix || "Target:")}"
+        data-days-left-tag="${esc(countdownCopy.daysLeftTag || "Days left")}"
+        data-one-day-text="${esc(countdownCopy.oneDayText || "day left.")}"
+        data-tomorrow-text="${esc(countdownCopy.tomorrowText || "Tomorrow ❤️")}"
+        data-almost-short-tag="${esc(countdownCopy.almostShortTag || "Almost")}"
+        data-today-text="${esc(countdownCopy.todayText || "Today is the day ❤️")}"
+        data-today-tag="${esc(countdownCopy.todayTag || "Today")}"
+        data-complete-text="${esc(countdownCopy.completeText || "The countdown is complete ❤️")}"
+        data-complete-tag="${esc(countdownCopy.completeTag || "Complete")}">
+        <div class="big-number" data-countdown-days>--</div>
+        <p data-countdown-text>${esc(countdownCopy.initialText || "Counting down.")}</p>
+        <span class="tag ok" data-countdown-tag>${esc(countdownCopy.dateTag || countdownCopy.daysLeftTag || "Days left")}</span><span class="tag warn">${esc(countdownCopy.almostTag || "Almost there")}</span>
+      </div>
+    `, "countdown frame");
   }
 
   function renderChecklist(frame) {
@@ -115,8 +133,8 @@
     const html = (config.content.laundry || []).map(item => `
       <details>
         <summary>${esc(item.load)} — ${esc(item.temp)}</summary>
-        <p><strong>Detergent:</strong> ${esc(item.detergent)}</p>
-        <p><strong>Avoid:</strong> ${esc(item.avoid)}</p>
+        <p><strong>Was spul:</strong> ${esc(item.detergent)}</p>
+        <p><strong>Let Op:</strong> ${esc(item.avoid)}</p>
       </details>
     `).join("");
     return renderShell(frame, html, "instruction frame");
@@ -327,7 +345,11 @@
     const frame = { id, type, category: defaultCategory(type), title: FRAME_TYPES[type] || "New frame", width: defaultWidth(type), enabled: true };
     if (type === "checklist") frame.source = "daily";
     if (type === "dailySop") frame.source = "dailySop";
-    if (type === "countdown") frame.targetDate = config.meta.countdownTarget;
+    if (type === "countdown") {
+      const firstCountdownKey = Object.keys(config.content?.countdowns || {})[0];
+      frame.source = firstCountdownKey || "";
+      frame.targetDate = firstCountdownKey ? config.content.countdowns[firstCountdownKey].targetDate : config.meta.countdownTarget;
+    }
     if (type === "customHtml") frame.html = ui.editor?.customFramePlaceholder || "<p>A custom frame. Edit this in the exported config.</p>";
     layout.push(frame);
     saveLayout();
@@ -335,11 +357,19 @@
   }
 
   function updateCountdowns() {
-    document.querySelectorAll("[data-countdown-days]").forEach(daysEl => {
-      const targetDateText = daysEl.dataset.targetDate || config.meta.countdownTarget;
-      const textEl = daysEl.parentElement.querySelector("[data-countdown-text]");
-      const tagEl = daysEl.parentElement.querySelector("[data-countdown-tag]");
+    document.querySelectorAll("[data-countdown-widget]").forEach(widget => {
+      const targetDateText = widget.dataset.targetDate || config.meta.countdownTarget;
+      const daysEl = widget.querySelector("[data-countdown-days]");
+      const textEl = widget.querySelector("[data-countdown-text]");
+      const tagEl = widget.querySelector("[data-countdown-tag]");
       const target = parseLocalDate(targetDateText);
+      if (!target || Number.isNaN(target.getTime())) {
+        if (daysEl) daysEl.textContent = "?";
+        if (textEl) textEl.textContent = `Invalid target date: ${targetDateText || "empty"}`;
+        if (tagEl) tagEl.textContent = "Check config";
+        return;
+      }
+
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const targetDay = new Date(target.getFullYear(), target.getMonth(), target.getDate());
@@ -348,26 +378,27 @@
       const label = target.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
       if (dayDiff > 1) {
         daysEl.textContent = dayDiff;
-        textEl.innerHTML = `${esc(ui.countdown?.manyDaysText || "days until we see each other again.")}</span>`;
-        tagEl.textContent = ui.countdown?.daysLeftTag || "Days left";
+        textEl.innerHTML = `${esc(widget.dataset.manyDaysText || "days left.")}<span class="countdown-date">${esc(widget.dataset.targetPrefix || "Target:")} ${esc(label)}</span>`;
+        tagEl.textContent = widget.dataset.daysLeftTag || "Days left";
       } else if (dayDiff === 1) {
         daysEl.textContent = "1";
-        textEl.innerHTML = `${esc(ui.countdown?.oneDayText || "day until we see each other again.")}<span class="countdown-date">${esc(ui.countdown?.tomorrowText || "Tomorrow ❤️")}</span>`;
-        tagEl.textContent = ui.countdown?.almostShortTag || "Almost";
+        textEl.innerHTML = `${esc(widget.dataset.oneDayText || "day left.")}<span class="countdown-date">${esc(widget.dataset.tomorrowText || "Tomorrow ❤️")}</span>`;
+        tagEl.textContent = widget.dataset.almostShortTag || "Almost";
       } else if (dayDiff === 0) {
         daysEl.textContent = "0";
-        textEl.innerHTML = esc(ui.countdown?.todayText || "days left. Today is the day we see each other again ❤️");
-        tagEl.textContent = ui.countdown?.todayTag || "Today";
+        textEl.innerHTML = esc(widget.dataset.todayText || "Today is the day ❤️");
+        tagEl.textContent = widget.dataset.todayTag || "Today";
       } else {
         daysEl.textContent = "0";
-        textEl.innerHTML = esc(ui.countdown?.completeText || "The countdown is complete. We saw each other again ❤️");
-        tagEl.textContent = ui.countdown?.completeTag || "Complete";
+        textEl.innerHTML = esc(widget.dataset.completeText || "The countdown is complete ❤️");
+        tagEl.textContent = widget.dataset.completeTag || "Complete";
       }
     });
   }
 
   function parseLocalDate(value) {
-    const [year, month, day] = String(value).split("-").map(Number);
+    const [year, month, day] = String(value || "").split("-").map(Number);
+    if (!year || !month || !day) return null;
     return new Date(year, month - 1, day, 0, 0, 0);
   }
 
