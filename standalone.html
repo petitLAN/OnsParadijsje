@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ons Paradijsje — Standalone Dashboard</title>
+  <style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&display=swap");
+
+:root {
+  --bg: #3f55a6;
+  --panel: #354c9f;
+  --panel-dark: #2f407f;
+  --cream: #fff3db;
+  --white: #fffaf0;
+  --pink: #ff2bbd;
+  --lime: #ecff19;
+  --peach: #ffb083;
+  --ink-blue: #354c9f;
+  --line: rgba(255, 243, 219, .36);
+  --shadow: 12px 12px 0 rgba(255, 43, 189, .88), 0 18px 45px rgba(13, 18, 57, .22);
+  --radius: 34px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--bg); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--white);
+  background:
+    radial-gradient(circle at 86% 10%, rgba(236, 255, 25, .23) 0, transparent 18rem),
+    radial-gradient(circle at 12% 92%, rgba(255, 43, 189, .21) 0, transparent 22rem),
+    linear-gradient(180deg, var(--bg) 0%, #35498f 55%, var(--panel-dark) 100%);
+}
+
+.page {
+  width: min(1760px, calc(100vw - 72px));
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(330px, 36vw, 640px);
+  padding: clamp(42px, 5vw, 94px);
+  border-radius: 0 0 64px 64px;
+  background:
+    linear-gradient(90deg, rgba(53, 76, 159, .94), rgba(53, 76, 159, .72)),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.11) 0 2px, transparent 2px 30px),
+    var(--panel);
+  box-shadow: 0 22px 70px rgba(13, 18, 57, .34);
+  margin-bottom: 34px;
+}
+
+.hero-copy { position: relative; z-index: 2; max-width: min(970px, calc(100% - 340px)); }
+
+.hero h1 {
+  margin: 20px 0 32px;
+  color: var(--lime);
+  font-size: clamp(72px, 9.5vw, 156px);
+  line-height: .88;
+  letter-spacing: -.085em;
+  text-transform: uppercase;
+  font-weight: 900;
+  text-shadow: 12px 10px 0 var(--pink);
+}
+
+.hero-lead,
+.hero-greeting {
+  margin: 0 0 22px;
+  color: var(--cream);
+  font-size: clamp(18px, 1.45vw, 27px);
+  line-height: 1.45;
+  font-weight: 900;
+}
+
+.hero-seal {
+  position: absolute;
+  right: clamp(26px, 4vw, 58px);
+  top: clamp(26px, 4vw, 56px);
+  width: clamp(160px, 16vw, 292px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: var(--lime);
+  color: var(--pink);
+  font-size: clamp(17px, 1.7vw, 31px);
+  font-weight: 900;
+  line-height: .9;
+  text-transform: uppercase;
+  box-shadow: 0 0 0 9px var(--pink), 0 0 0 17px var(--lime), 0 12px 0 #26356e;
+  transform: rotate(5deg);
+}
+
+.hero-seal span { transform: rotate(4deg); }
+
+.ghost-blocks {
+  position: absolute;
+  left: clamp(28px, 4.5vw, 86px);
+  bottom: 36px;
+  display: flex;
+  gap: 31px;
+  opacity: .16;
+}
+
+.ghost-blocks span {
+  width: clamp(90px, 9vw, 170px);
+  height: clamp(88px, 9vw, 164px);
+  border-radius: 56px 0 0 56px;
+  background: var(--cream);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 34px;
+  align-items: stretch;
+}
+
+.span-3 { grid-column: span 3; }
+.span-4 { grid-column: span 4; }
+.span-5 { grid-column: span 5; }
+.span-6 { grid-column: span 6; }
+.span-7 { grid-column: span 7; }
+.span-8 { grid-column: span 8; }
+.span-12 { grid-column: span 12; }
+
+.card {
+  position: relative;
+  min-width: 0;
+  min-height: 100%;
+  padding: clamp(26px, 2.35vw, 44px);
+  border: 5px solid var(--cream);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card-title {
+  margin: 16px 0 24px;
+  color: var(--lime);
+  font-size: clamp(42px, 5vw, 86px);
+  line-height: .9;
+  letter-spacing: -.07em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.span-3 .card-title { font-size: clamp(38px, 4.1vw, 70px); }
+.span-4 .card-title { font-size: clamp(44px, 4.9vw, 82px); }
+.span-5 .card-title { font-size: clamp(48px, 5.2vw, 88px); }
+.span-8 .card-title { font-size: clamp(58px, 6vw, 104px); }
+.span-12 .card-title { font-size: clamp(60px, 5.5vw, 104px); }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  min-height: 42px;
+  padding: 8px 16px;
+  border: 3px solid var(--white);
+  border-radius: 999px;
+  font-size: clamp(12px, .95vw, 19px);
+  line-height: 1;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.tag-pink { background: var(--pink); color: var(--white); }
+
+.big-number {
+  color: var(--lime);
+  font-size: clamp(110px, 13vw, 225px);
+  line-height: .78;
+  letter-spacing: -.09em;
+  font-weight: 900;
+  text-shadow: 12px 12px 0 var(--pink);
+}
+
+.count-text,
+.count-target {
+  margin: 20px 0 0;
+  color: var(--cream);
+  font-size: clamp(18px, 1.55vw, 26px);
+  line-height: 1.3;
+  font-weight: 900;
+}
+.count-target { text-transform: uppercase; letter-spacing: .08em; }
+
+.mini-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+.mini-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 41px;
+  padding: 8px 16px;
+  border: 3px solid var(--white);
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--ink-blue);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.mini-chip-peach { background: var(--peach); }
+
+.static-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.static-checklist li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+  padding: 18px 4px 23px;
+  border-bottom: 3px dashed var(--line);
+  color: var(--white);
+  font-size: clamp(18px, 1.5vw, 27px);
+  line-height: 1.25;
+  font-weight: 900;
+}
+.fake-checkbox {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(0, 0, 0, .28);
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.6);
+}
+
+.levels-list { display: grid; gap: 19px; }
+.level-row { display: grid; gap: 8px; }
+.level-top {
+  display: grid;
+  grid-template-columns: minmax(150px, .8fr) minmax(130px, 1.2fr) 56px;
+  gap: 18px;
+  align-items: center;
+}
+.level-top::after { content: ""; height: 0; }
+.level-top strong {
+  font-size: clamp(18px, 1.35vw, 25px);
+  line-height: 1.1;
+  font-weight: 900;
+}
+.level-top span {
+  grid-column: 3;
+  font-size: 19px;
+  font-weight: 900;
+  text-align: right;
+}
+.bar {
+  grid-column: 2;
+  height: 19px;
+  padding: 3px;
+  border: 3px solid var(--cream);
+  border-radius: 999px;
+  background: rgba(255, 243, 219, .28);
+}
+.bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--lime), var(--peach), var(--pink));
+}
+.level-row p {
+  margin: 0;
+  color: var(--cream);
+  font-size: clamp(14px, 1vw, 18px);
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.instruction-list { display: grid; gap: 19px; }
+.instruction-card,
+.steps-card,
+.recipe-card,
+.matrix-card,
+.note-card {
+  overflow-wrap: anywhere;
+}
+.instruction-card {
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  padding: 20px 25px;
+  border: 5px solid var(--peach);
+  border-radius: 28px;
+  background: var(--cream);
+  color: var(--pink);
+  box-shadow: 10px 10px 0 var(--pink);
+  font-size: clamp(18px, 1.25vw, 24px);
+  line-height: 1.15;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.stock-list {
+  margin: 18px 0 0 22px;
+  padding: 0;
+  color: var(--white);
+  font-size: clamp(20px, 1.55vw, 28px);
+  line-height: 1.75;
+  font-weight: 700;
+}
+.stock-list li { padding-left: 4px; }
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 34px;
+  align-items: stretch;
+}
+.recipe-card {
+  min-height: 285px;
+  display: flex;
+  flex-direction: column;
+  padding: 26px;
+  border: 5px solid var(--peach);
+  border-radius: 32px;
+  background: var(--cream);
+  color: var(--ink-blue);
+  box-shadow: 12px 12px 0 var(--pink);
+}
+.recipe-card h3 {
+  margin: 0 0 10px;
+  color: var(--pink);
+  font-size: clamp(20px, 1.55vw, 29px);
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+.recipe-card p {
+  margin: 22px 0 22px;
+  color: var(--ink-blue);
+  font-size: clamp(15px, 1.1vw, 20px);
+  line-height: 1.45;
+  font-weight: 900;
+}
+.steps-card {
+  margin-top: auto;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+  border: 5px solid var(--peach);
+  border-radius: 28px;
+  background: var(--cream);
+  color: var(--pink);
+  box-shadow: 10px 10px 0 var(--pink);
+  font-size: 24px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 34px;
+}
+.note-card {
+  min-height: 165px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 36px 44px;
+  border: 5px solid var(--cream);
+  border-radius: 36px;
+  font-weight: 900;
+}
+.note-hot { background: var(--pink); color: var(--white); box-shadow: 18px 18px 0 var(--lime); }
+.note-calm { background: var(--cream); color: var(--ink-blue); border-color: transparent; box-shadow: 18px 18px 0 var(--pink); }
+.note-card h3 {
+  margin: 0 0 36px;
+  font-size: clamp(30px, 2.6vw, 50px);
+  line-height: 1.02;
+  letter-spacing: -.06em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+.note-card p {
+  margin: 0;
+  font-size: clamp(18px, 1.28vw, 24px);
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.procedure-list {
+  counter-reset: sop;
+  display: grid;
+  gap: 31px;
+  margin: 0;
+  padding: 0;
+}
+.procedure-list li {
+  counter-increment: sop;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  color: var(--white);
+  font-size: clamp(18px, 1.45vw, 26px);
+  line-height: 1.25;
+  font-weight: 900;
+}
+.procedure-list li::before {
+  content: counter(sop);
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--white);
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--pink);
+  box-shadow: 6px 7px 0 var(--pink);
+  font-weight: 900;
+}
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 34px;
+}
+.matrix-card {
+  min-height: 300px;
+  padding: 32px;
+  border: 5px solid var(--peach);
+  border-radius: 34px;
+  background: var(--cream);
+  color: var(--ink-blue);
+  box-shadow: 12px 12px 0 var(--pink);
+}
+.matrix-card h3 {
+  margin: 24px 0 16px;
+  color: var(--pink);
+  font-size: clamp(28px, 2.25vw, 44px);
+  line-height: 1;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+.matrix-card ul {
+  margin: 0 0 0 22px;
+  padding: 0;
+  font-size: clamp(17px, 1.25vw, 23px);
+  line-height: 1.75;
+  font-weight: 900;
+}
+
+.footer-note {
+  margin: 50px 0 0;
+  padding-top: 26px;
+  border-top: 3px dashed var(--line);
+  color: var(--cream);
+  font-size: clamp(16px, 1.35vw, 26px);
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+@media (max-width: 1200px) {
+  .page { width: min(100vw - 34px, 980px); }
+  .dashboard-grid { grid-template-columns: 1fr; gap: 28px; }
+  .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 { grid-column: 1; }
+  .hero-copy { max-width: calc(100% - 210px); }
+  .level-top { grid-template-columns: 1fr auto; }
+  .level-top span { grid-column: auto; }
+  .bar { grid-column: 1 / -1; }
+}
+
+@media (max-width: 860px) {
+  .hero-copy { max-width: 100%; }
+  .hero-seal { position: relative; right: auto; top: auto; margin-top: 32px; }
+  .recipe-grid, .note-grid, .matrix-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .page { width: calc(100vw - 22px); padding-top: 18px; }
+  .hero { padding: 32px 23px 120px; border-radius: 0 0 34px 34px; }
+  .hero h1 { font-size: 58px; text-shadow: 6px 5px 0 var(--pink); }
+  .hero-seal { width: 145px; font-size: 16px; }
+  .ghost-blocks { left: 22px; gap: 12px; }
+  .card { padding: 24px; border-radius: 28px; box-shadow: 9px 9px 0 rgba(255, 43, 189, .88); }
+  .card-title, .span-3 .card-title, .span-4 .card-title, .span-5 .card-title, .span-8 .card-title, .span-12 .card-title { font-size: 42px; }
+  .static-checklist li { grid-template-columns: 28px 1fr; gap: 14px; }
+  .fake-checkbox { width: 24px; height: 24px; }
+  .procedure-list li { grid-template-columns: 48px 1fr; }
+  .procedure-list li::before { width: 46px; height: 46px; }
+}
+
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header id="hero" class="hero"></header>
+    <section id="dashboard" class="dashboard-grid" aria-label="Ons Paradijsje dashboard"></section>
+    <p id="privacyNote" class="footer-note"></p>
+  </main>
+  <script>
+/*
+  Ons Paradijsje dashboard content and layout
+  -------------------------------------------
+  This is the only file you normally edit.
+
+  Add/shuffle cards:
+  - Reorder objects in DASHBOARD_CONFIG.layout.
+  - Duplicate a layout object and give it a new id.
+  - Set span to 3, 4, 5, 6, 7, 8, or 12.
+  - Set enabled: false to hide a card without deleting it.
+
+  Edit text:
+  - All visible words live inside DASHBOARD_CONFIG.content.
+  - Tags/labels are just strings, so every imported card can have its own custom title.
+
+  No cards have click actions. The site only renders static UI from this config.
+*/
+window.DASHBOARD_CONFIG = {
+  meta: {
+    title: "Ons Paradijsje",
+    heroLabel: "Modular house dashboard",
+    subtitle: "Eat. Sleep. Janken. Repeat. Althans, totdat ik weer terugkom om jouw huisvrouwtje te zijn.",
+    greeting: "Hallow Poetsjiepoeh c3 dit zijn niet per se de huisregels, gewoon een uitgebreide todo lijst wat ik zoal doe als jij druk geld verdient. Of soms ook niet doe...",
+    seal: "Ons Paradijsje",
+    footer: "Privacy reminder: do not publish exact away-dates, address, alarm codes, spare-key locations, or Wi‑Fi passwords on a public GitHub Pages site."
+  },
+
+  layout: [
+    { id: "countdown", type: "countdown", span: 4, content: "countdown", enabled: true },
+    { id: "do-first", type: "checklist", span: 8, content: "doFirst", enabled: true },
+    { id: "consistency", type: "levels", span: 5, content: "consistency", enabled: true },
+    { id: "laundry", type: "laundry", span: 4, content: "laundry", enabled: true },
+    { id: "shopping", type: "stock", span: 3, content: "shopping", enabled: true },
+    { id: "recipes", type: "recipes", span: 12, content: "recipes", enabled: true },
+    { id: "notes", type: "notes", span: 12, content: "notes", enabled: true },
+    { id: "daily-sop", type: "sop", span: 6, content: "dailySop", enabled: true },
+    { id: "decisions", type: "matrix", span: 6, content: "decisions", enabled: true }
+  ],
+
+  content: {
+    countdown: {
+      label: "Poetsjiepoeh",
+      title: "Countdown",
+      targetDate: "2026-06-30",
+      manualDays: 33,
+      text: "days until ü n me ish ushj",
+      target: "Target: pretsjul & phoekie",
+      chips: ["Days left", "Almost there"]
+    },
+
+    doFirst: {
+      label: "Checkcheck",
+      title: "Do these first",
+      items: [
+        "Open curtains and air the bedroom for 10 minutes.",
+        "Keep the kitchen counter clear before bed.",
+        "Check dishwasher: start it or empty it if needed.",
+        "Make sure laundry is not forgotten in the washing machine.",
+        "Lock the front door before sleeping."
+      ]
+    },
+
+    consistency: {
+      label: "Huisvrouw ü",
+      title: "Consistency levels",
+      items: [
+        { title: "Kitchen baseline", detail: "Counter clear, sink not full, dishwasher handled before bed.", score: 90 },
+        { title: "Laundry rhythm", detail: "Better one small load than a scary mountain later.", score: 75 },
+        { title: "Fresh air", detail: "Short airing moments are enough; do not leave windows open all day.", score: 70 },
+        { title: "Calm house rule", detail: "If something smells weird, looks wet, or beeps: investigate sooner.", score: 95 }
+      ]
+    },
+
+    laundry: {
+      label: "Instructions de machine lávier",
+      title: "Wasnadatwas",
+      items: [
+        "Normal clothes — 30–40°C",
+        "Towels — 60°C",
+        "Delicates / nice shirts — 30°C gentle",
+        "Bedding — 40–60°C"
+      ]
+    },
+
+    shopping: {
+      label: "Shopping...",
+      title: "Always check these in stock",
+      items: ["Muesli", "Yoghurt", "Coffee", "You feel overwhelmed"]
+    },
+
+    recipes: {
+      label: "Fast food",
+      title: "Easy food recipes",
+      items: [
+        { name: "Pasta pesto comfort bowl", time: "15 min", ingredients: "Pasta, Pesto, Tomatoes, Cheese", stepsLabel: "Steps" },
+        { name: "Rice bowl", time: "20 min", ingredients: "Rice, Egg or tofu, Vegetables, Soy sauce", stepsLabel: "Steps" },
+        { name: "Oven wraps", time: "18 min", ingredients: "Wraps, Cheese, Beans/chicken, Vegetables", stepsLabel: "Steps" }
+      ]
+    },
+
+    notes: {
+      label: "Brainfarts",
+      title: "Short notes",
+      items: [
+        { tone: "hot", icon: "🧺", title: "I need to do laundry", text: "Please keep the clean and dirty pile separate" },
+        { tone: "calm", icon: "🍝", title: "I need food", text: "No, tuna with rice is not an option" },
+        { tone: "hot", icon: "🧽", title: "I should clean", text: "Also your feet...! And you, go in the shower" },
+        { tone: "calm", icon: "🆘", title: "Something is weird", text: "Jij stinkt. En kook met het brandalarm a.u.b." }
+      ]
+    },
+
+    dailySop: {
+      label: "Procedure",
+      title: "Daily SOP",
+      items: [
+        "Open curtains and air the bedroom for 10 minutes.",
+        "Keep the kitchen counter clear before bed.",
+        "Check dishwasher: start it or empty it if needed.",
+        "Make sure laundry is not forgotten in the washing machine.",
+        "Lock the front door before sleeping."
+      ]
+    },
+
+    decisions: {
+      label: "Priorities",
+      title: "Decisionssss",
+      columns: [
+        { label: "Urgent", title: "Do now", items: ["Wet laundry", "Weird smell", "Unlocked door", "Overflowing trash"] },
+        { label: "Optional", title: "Can wait", items: ["Vacuum if not dirty", "Deep cleaning", "Fancy cooking", "Perfect organization"] }
+      ]
+    }
+  }
+};
+
+  </script>
+  <script>
+(() => {
+  const config = window.DASHBOARD_CONFIG;
+  const hero = document.getElementById("hero");
+  const dashboard = document.getElementById("dashboard");
+  const privacyNote = document.getElementById("privacyNote");
+
+  const esc = (value) => String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+  const slug = (value) => String(value || "card")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "") || "card";
+
+  function renderHero() {
+    const meta = config.meta;
+    hero.innerHTML = `
+      <div class="hero-copy">
+        <span class="tag tag-pink">${esc(meta.heroLabel)}</span>
+        <h1>${esc(meta.title)}</h1>
+        <p class="hero-lead">${esc(meta.subtitle)}</p>
+        <p class="hero-greeting">${esc(meta.greeting)}</p>
+      </div>
+      <div class="hero-seal"><span>${esc(meta.seal)}</span></div>
+      <div class="ghost-blocks" aria-hidden="true"><span></span><span></span><span></span></div>`;
+    privacyNote.textContent = meta.footer;
+  }
+
+  function cardShell(frame, content, extraClass = "") {
+    const data = config.content[frame.content] || {};
+    return `
+      <article id="${esc(slug(frame.id))}" class="card span-${esc(frame.span || 4)} ${esc(extraClass)}" data-card-type="${esc(frame.type)}">
+        <span class="tag tag-pink">${esc(data.label || frame.type)}</span>
+        <h2 class="card-title">${esc(data.title || frame.id)}</h2>
+        <div class="card-body">${content}</div>
+      </article>`;
+  }
+
+  function renderCountdown(frame) {
+    const data = config.content[frame.content];
+    const days = Number.isFinite(data.manualDays) ? data.manualDays : daysUntil(data.targetDate);
+    const chips = (data.chips || []).map((chip, index) => `<span class="mini-chip ${index % 2 ? "mini-chip-peach" : ""}">${esc(chip)}</span>`).join("");
+    return cardShell(frame, `
+      <div class="big-number">${esc(days)}</div>
+      <p class="count-text">${esc(data.text)}</p>
+      <p class="count-target">${esc(data.target)}</p>
+      <div class="mini-chips">${chips}</div>
+    `, "countdown-card");
+  }
+
+  function daysUntil(dateText) {
+    const [year, month, day] = String(dateText || "").split("-").map(Number);
+    if (!year || !month || !day) return "--";
+    const target = new Date(year, month - 1, day);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.max(0, Math.ceil((target - today) / 86400000));
+  }
+
+  function renderChecklist(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => `
+      <li><span class="fake-checkbox" aria-hidden="true"></span><span>${esc(item)}</span></li>`).join("");
+    return cardShell(frame, `<ul class="static-checklist">${rows}</ul>`, "checklist-card");
+  }
+
+  function renderLevels(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => {
+      const score = Math.max(0, Math.min(100, Number(item.score || 0)));
+      return `
+        <div class="level-row">
+          <div class="level-top"><strong>${esc(item.title)}</strong><span>${score}%</span></div>
+          <div class="bar" aria-hidden="true"><span style="width:${score}%"></span></div>
+          <p>${esc(item.detail)}</p>
+        </div>`;
+    }).join("");
+    return cardShell(frame, `<div class="levels-list">${rows}</div>`, "levels-card");
+  }
+
+  function renderLaundry(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => `<div class="instruction-card">▸ ${esc(item)}</div>`).join("");
+    return cardShell(frame, `<div class="instruction-list">${rows}</div>`, "laundry-card");
+  }
+
+  function renderStock(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => `<li>${esc(item)}</li>`).join("");
+    return cardShell(frame, `<ul class="stock-list">${rows}</ul>`, "stock-card");
+  }
+
+  function renderRecipes(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(recipe => `
+      <article class="recipe-card">
+        <h3>🍽️ ${esc(recipe.name)}</h3>
+        <span class="mini-chip">${esc(recipe.time)}</span>
+        <p><strong>Ingredients:</strong> ${esc(recipe.ingredients)}</p>
+        <div class="steps-card">▸ ${esc(recipe.stepsLabel || "Steps")}</div>
+      </article>`).join("");
+    return cardShell(frame, `<div class="recipe-grid">${rows}</div>`, "recipes-card");
+  }
+
+  function renderNotes(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(note => `
+      <article class="note-card ${note.tone === "hot" ? "note-hot" : "note-calm"}">
+        <h3>${esc(note.icon)} ${esc(note.title)}</h3>
+        <p>${esc(note.text)}</p>
+      </article>`).join("");
+    return cardShell(frame, `<div class="note-grid">${rows}</div>`, "notes-card");
+  }
+
+  function renderSop(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => `<li><span>${esc(item)}</span></li>`).join("");
+    return cardShell(frame, `<ol class="procedure-list">${rows}</ol>`, "sop-card");
+  }
+
+  function renderMatrix(frame) {
+    const data = config.content[frame.content];
+    const columns = (data.columns || []).map(column => `
+      <article class="matrix-card">
+        <span class="mini-chip ${String(column.label).toLowerCase().includes("urgent") ? "mini-chip-peach" : ""}">${esc(column.label)}</span>
+        <h3>${esc(column.title)}</h3>
+        <ul>${(column.items || []).map(item => `<li>${esc(item)}</li>`).join("")}</ul>
+      </article>`).join("");
+    return cardShell(frame, `<div class="matrix-grid">${columns}</div>`, "matrix-frame");
+  }
+
+  const renderers = {
+    countdown: renderCountdown,
+    checklist: renderChecklist,
+    levels: renderLevels,
+    laundry: renderLaundry,
+    stock: renderStock,
+    recipes: renderRecipes,
+    notes: renderNotes,
+    sop: renderSop,
+    matrix: renderMatrix
+  };
+
+  function renderDashboard() {
+    dashboard.innerHTML = config.layout
+      .filter(frame => frame.enabled !== false)
+      .map(frame => (renderers[frame.type] || renderChecklist)(frame))
+      .join("");
+  }
+
+  renderHero();
+  renderDashboard();
+})();
+
+  </script>
+</body>
+</html>

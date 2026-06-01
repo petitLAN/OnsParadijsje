@@ -1,173 +1,157 @@
-/*
-  Ons Paradijsje dashboard renderer
-  ------------------------------------------------------------
-  This file contains the rendering logic only.
-  Content lives in assets/content.js.
-  There are intentionally no click handlers or interactive card actions.
-*/
+(() => {
+  const config = window.DASHBOARD_CONFIG;
+  const hero = document.getElementById("hero");
+  const dashboard = document.getElementById("dashboard");
+  const privacyNote = document.getElementById("privacyNote");
 
-const content = window.DASHBOARD_CONTENT;
-const root = document.getElementById("dashboard");
+  const esc = (value) => String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
-const escapeHtml = (value = "") => String(value)
-  .replaceAll("&", "&amp;")
-  .replaceAll("<", "&lt;")
-  .replaceAll(">", "&gt;")
-  .replaceAll('"', "&quot;")
-  .replaceAll("'", "&#039;");
+  const slug = (value) => String(value || "card")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "") || "card";
 
-const nlToBreaks = (value = "") => escapeHtml(value).replaceAll("\n", "<br>");
+  function renderHero() {
+    const meta = config.meta;
+    hero.innerHTML = `
+      <div class="hero-copy">
+        <span class="tag tag-pink">${esc(meta.heroLabel)}</span>
+        <h1>${esc(meta.title)}</h1>
+        <p class="hero-lead">${esc(meta.subtitle)}</p>
+        <p class="hero-greeting">${esc(meta.greeting)}</p>
+      </div>
+      <div class="hero-seal"><span>${esc(meta.seal)}</span></div>
+      <div class="ghost-blocks" aria-hidden="true"><span></span><span></span><span></span></div>`;
+    privacyNote.textContent = meta.footer;
+  }
 
-function pill(label, extraClass = "") {
-  return `<span class="pill ${extraClass}">${escapeHtml(label)}</span>`;
-}
+  function cardShell(frame, content, extraClass = "") {
+    const data = config.content[frame.content] || {};
+    return `
+      <article id="${esc(slug(frame.id))}" class="card span-${esc(frame.span || 4)} ${esc(extraClass)}" data-card-type="${esc(frame.type)}">
+        <span class="tag tag-pink">${esc(data.label || frame.type)}</span>
+        <h2 class="card-title">${esc(data.title || frame.id)}</h2>
+        <div class="card-body">${content}</div>
+      </article>`;
+  }
 
-function chip(label, tone = "neon") {
-  return `<span class="mini-pill ${tone === "peach" ? "alt" : ""}">${escapeHtml(label)}</span>`;
-}
+  function renderCountdown(frame) {
+    const data = config.content[frame.content];
+    const days = Number.isFinite(data.manualDays) ? data.manualDays : daysUntil(data.targetDate);
+    const chips = (data.chips || []).map((chip, index) => `<span class="mini-chip ${index % 2 ? "mini-chip-peach" : ""}">${esc(chip)}</span>`).join("");
+    return cardShell(frame, `
+      <div class="big-number">${esc(days)}</div>
+      <p class="count-text">${esc(data.text)}</p>
+      <p class="count-target">${esc(data.target)}</p>
+      <div class="mini-chips">${chips}</div>
+    `, "countdown-card");
+  }
 
-function renderHero(hero) {
-  return `
-    <header class="hero">
-      ${pill(hero.tag)}
-      <h1>${hero.titleLines.map(escapeHtml).join("<br>")}</h1>
-      <p class="lead">${escapeHtml(hero.subtitle)}</p>
-      <p class="lead">${escapeHtml(hero.greeting)}</p>
-      <div class="hero-badge"><span>${escapeHtml(hero.badge)}</span></div>
-      <div class="ghost-blocks" aria-hidden="true"><span></span><span></span><span></span></div>
-    </header>
-  `;
-}
+  function daysUntil(dateText) {
+    const [year, month, day] = String(dateText || "").split("-").map(Number);
+    if (!year || !month || !day) return "--";
+    const target = new Date(year, month - 1, day);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.max(0, Math.ceil((target - today) / 86400000));
+  }
 
-function cardShell(card, body) {
-  return `
-    <article class="card ${escapeHtml(card.layout || card.type)}">
-      ${pill(card.tag)}
-      <h2 class="headline">${nlToBreaks(card.title)}</h2>
-      ${body}
-    </article>
-  `;
-}
+  function renderChecklist(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => `
+      <li><span class="fake-checkbox" aria-hidden="true"></span><span>${esc(item)}</span></li>`).join("");
+    return cardShell(frame, `<ul class="static-checklist">${rows}</ul>`, "checklist-card");
+  }
 
-function renderCountdown(card) {
-  return cardShell(card, `
-    <div class="count-number">${escapeHtml(card.number)}</div>
-    <p>${escapeHtml(card.caption)}</p>
-    <p class="target">${escapeHtml(card.target)}</p>
-    <div class="mini-pills">${card.chips.map(c => chip(c.label, c.tone)).join("")}</div>
-  `);
-}
-
-function renderChecklist(card) {
-  return cardShell(card, `
-    <ul class="todo-list">
-      ${card.items.map(item => `
-        <li><span class="fake-check" aria-hidden="true"></span><span>${escapeHtml(item)}</span></li>
-      `).join("")}
-    </ul>
-  `);
-}
-
-function renderLevels(card) {
-  return cardShell(card, `
-    <div class="levels-list">
-      ${card.levels.map(level => `
+  function renderLevels(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => {
+      const score = Math.max(0, Math.min(100, Number(item.score || 0)));
+      return `
         <div class="level-row">
-          <span class="level-title">${escapeHtml(level.label)}</span>
-          <span class="bar" aria-hidden="true"><span class="bar-fill" style="--value:${Number(level.value)}%"></span></span>
-          <span class="level-percent">${Number(level.value)}%</span>
-        </div>
-        <p class="level-note">${escapeHtml(level.note)}</p>
-      `).join("")}
-    </div>
-  `);
-}
+          <div class="level-top"><strong>${esc(item.title)}</strong><span>${score}%</span></div>
+          <div class="bar" aria-hidden="true"><span style="width:${score}%"></span></div>
+          <p>${esc(item.detail)}</p>
+        </div>`;
+    }).join("");
+    return cardShell(frame, `<div class="levels-list">${rows}</div>`, "levels-card");
+  }
 
-function renderInstructions(card) {
-  return cardShell(card, `
-    <div class="instruction-list">
-      ${card.items.map(item => `<div class="instruction">▸ ${escapeHtml(item)}</div>`).join("")}
-    </div>
-  `);
-}
+  function renderLaundry(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => `<div class="instruction-card">▸ ${esc(item)}</div>`).join("");
+    return cardShell(frame, `<div class="instruction-list">${rows}</div>`, "laundry-card");
+  }
 
-function renderBullets(card) {
-  return cardShell(card, `<ul class="plain-list">${card.items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`);
-}
+  function renderStock(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => `<li>${esc(item)}</li>`).join("");
+    return cardShell(frame, `<ul class="stock-list">${rows}</ul>`, "stock-card");
+  }
 
-function renderRecipes(card) {
-  return cardShell(card, `
-    <div class="recipe-grid">
-      ${card.recipes.map(recipe => `
-        <section class="cream-card recipe-card">
-          <h3>${escapeHtml(recipe.title)}</h3>
-          <span class="time-chip">${escapeHtml(recipe.time)}</span>
-          <p><strong>Ingredients:</strong> ${escapeHtml(recipe.ingredients)}</p>
-          <div class="steps-box" aria-hidden="true">▸ Steps</div>
-        </section>
-      `).join("")}
-    </div>
-  `);
-}
+  function renderRecipes(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(recipe => `
+      <article class="recipe-card">
+        <h3>🍽️ ${esc(recipe.name)}</h3>
+        <span class="mini-chip">${esc(recipe.time)}</span>
+        <p><strong>Ingredients:</strong> ${esc(recipe.ingredients)}</p>
+        <div class="steps-card">▸ ${esc(recipe.stepsLabel || "Steps")}</div>
+      </article>`).join("");
+    return cardShell(frame, `<div class="recipe-grid">${rows}</div>`, "recipes-card");
+  }
 
-function renderNotes(card) {
-  return cardShell(card, `
-    <div class="note-grid">
-      ${card.notes.map(note => `
-        <section class="note ${escapeHtml(note.tone)}">
-          <h3>${escapeHtml(note.title)}</h3>
-          <p>${escapeHtml(note.body)}</p>
-        </section>
-      `).join("")}
-    </div>
-  `);
-}
+  function renderNotes(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(note => `
+      <article class="note-card ${note.tone === "hot" ? "note-hot" : "note-calm"}">
+        <h3>${esc(note.icon)} ${esc(note.title)}</h3>
+        <p>${esc(note.text)}</p>
+      </article>`).join("");
+    return cardShell(frame, `<div class="note-grid">${rows}</div>`, "notes-card");
+  }
 
-function renderNumbered(card) {
-  return cardShell(card, `
-    <div class="number-list">
-      ${card.items.map((item, index) => `
-        <div class="number-row"><span class="number-badge">${index + 1}</span><span>${escapeHtml(item)}</span></div>
-      `).join("")}
-    </div>
-  `);
-}
+  function renderSop(frame) {
+    const data = config.content[frame.content];
+    const rows = (data.items || []).map(item => `<li><span>${esc(item)}</span></li>`).join("");
+    return cardShell(frame, `<ol class="procedure-list">${rows}</ol>`, "sop-card");
+  }
 
-function renderDecisions(card) {
-  return cardShell(card, `
-    <div class="decision-grid">
-      ${card.groups.map(group => `
-        <section class="cream-card decision-card">
-          ${chip(group.chip, group.chipTone)}
-          <h3>${escapeHtml(group.title)}</h3>
-          <ul>${group.items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-        </section>
-      `).join("")}
-    </div>
-  `);
-}
+  function renderMatrix(frame) {
+    const data = config.content[frame.content];
+    const columns = (data.columns || []).map(column => `
+      <article class="matrix-card">
+        <span class="mini-chip ${String(column.label).toLowerCase().includes("urgent") ? "mini-chip-peach" : ""}">${esc(column.label)}</span>
+        <h3>${esc(column.title)}</h3>
+        <ul>${(column.items || []).map(item => `<li>${esc(item)}</li>`).join("")}</ul>
+      </article>`).join("");
+    return cardShell(frame, `<div class="matrix-grid">${columns}</div>`, "matrix-frame");
+  }
 
-const renderers = {
-  countdown: renderCountdown,
-  checklist: renderChecklist,
-  levels: renderLevels,
-  instructions: renderInstructions,
-  bullets: renderBullets,
-  recipes: renderRecipes,
-  notes: renderNotes,
-  numbered: renderNumbered,
-  decisions: renderDecisions
-};
+  const renderers = {
+    countdown: renderCountdown,
+    checklist: renderChecklist,
+    levels: renderLevels,
+    laundry: renderLaundry,
+    stock: renderStock,
+    recipes: renderRecipes,
+    notes: renderNotes,
+    sop: renderSop,
+    matrix: renderMatrix
+  };
 
-function renderDashboard() {
-  root.innerHTML = [
-    renderHero(content.hero),
-    ...content.cards.map(card => {
-      const renderer = renderers[card.type];
-      return renderer ? renderer(card) : "";
-    }),
-    `<p class="footer-note">${escapeHtml(content.footer)}</p>`
-  ].join("\n");
-}
+  function renderDashboard() {
+    dashboard.innerHTML = config.layout
+      .filter(frame => frame.enabled !== false)
+      .map(frame => (renderers[frame.type] || renderChecklist)(frame))
+      .join("");
+  }
 
-renderDashboard();
+  renderHero();
+  renderDashboard();
+})();

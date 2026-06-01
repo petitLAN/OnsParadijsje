@@ -1,24 +1,32 @@
-# Ons Paradijsje Dashboard
+# Ons Paradijsje — Modular static dashboard
 
-A static, modular dashboard UI matching the provided screenshots.
+This package contains two versions of the same dashboard:
 
-## Files
+- `index.html` uses separate files in `assets/`.
+- `standalone.html` contains all HTML, CSS, content and rendering logic in one file.
 
-- `index.html` — page skeleton.
-- `assets/styles.css` — all visual styling.
-- `assets/content.js` — all text, card order, and card data.
-- `assets/app.js` — renderer logic only.
+## Where to edit text
 
-## How to edit content
+Edit `assets/config.js`.
 
-Open `assets/content.js`.
+All visible strings are in `window.DASHBOARD_CONFIG.content` and `window.DASHBOARD_CONFIG.meta`.
 
-- Change text directly inside the `hero`, `cards`, or `footer` fields.
-- Reorder cards by moving the card objects inside `DASHBOARD_CONTENT.cards`.
-- Duplicate an existing card object to create another card of the same type.
+## How to shuffle cards
 
-No card has a click action. The checkboxes, chips, and step boxes are purely visual.
+Edit `window.DASHBOARD_CONFIG.layout` in `assets/config.js`.
 
-## How to run
+Each card is one object:
 
-Open `index.html` in a browser. For GitHub Pages, upload the full folder structure as-is.
+```js
+{ id: "laundry", type: "laundry", span: 4, content: "laundry", enabled: true }
+```
+
+- `id`: unique card id.
+- `type`: renderer type, for example `countdown`, `checklist`, `levels`, `laundry`, `stock`, `recipes`, `notes`, `sop`, or `matrix`.
+- `span`: width in a 12-column grid. Use `3`, `4`, `5`, `6`, `7`, `8`, or `12`.
+- `content`: key inside `content`.
+- `enabled`: set to `false` to hide the card.
+
+## Static only
+
+Cards do not trigger actions. Checkboxes, recipe step boxes, and note cards are visual-only elements.
