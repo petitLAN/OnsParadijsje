@@ -1,18 +1,4 @@
-/*
-  Ons Paradijsje modular dashboard config
-  --------------------------------------
-  Main edit points:
-  - meta: title and hero text.
-  - ui: button labels, editor copy, footer note, and countdown wording.
-  - layout: order, card title, card tag, width, type, enabled state, and source.
-  - content: checklist text, countdown data, note-card text, recipes, laundry, rooms, decision matrices, etc.
-
-  Decision matrix cards are modular like recipes:
-  1. Put matrix data in content.decisionMatrices.
-  2. Add/copy a layout frame with type: "decisionMatrix".
-  3. Set source to the key of the matrix you want to show.
-  4. Add/remove/reorder category objects freely. No urgent/optional hardcoding.
-*/
+/* Exported from Ons Paradijsje modular dashboard */
 window.HOUSE_CONFIG = {
   "meta": {
     "documentTitle": "Ons Paradijsje — Modular Dashboard",
@@ -52,19 +38,20 @@ window.HOUSE_CONFIG = {
       "copySuffix": "copy",
       "customFramePlaceholder": "<p>A custom frame. Edit this in the exported config.</p>"
     },
-    "footerNote": "Privacy reminder: do not publish exact away-dates, address, alarm codes, spare-key locations, or Wi‑Fi passwords on a public GitHub Pages site.",
+    "footerNote": "Binnenkort zullen we snel weer samen koffie drinken Poetsjiepoeh, mijn kleine poekie...!!!  <3  <3   c==3",
     "countdown": {
       "initialText": "Counting down until we see each other again.",
-      "dateTag": "Days left",
+      "dateTag": "30 June",
       "almostTag": "Almost there",
-      "manyDaysText": "days until we see each other again.",
+      "manyDaysText": "dagen tot Ü 'N ME ❤️.",
+      "targetPrefix": "Target:",
       "daysLeftTag": "Days left",
-      "oneDayText": "day until we see each other again.",
+      "oneDayText": "dag tot Ü 'N ME ❤️.",
       "tomorrowText": "Tomorrow ❤️",
       "almostShortTag": "Almost",
-      "todayText": "days left. Today is the day we see each other again ❤️",
+      "todayText": "days left. Today is  Ü 'N ME ❤❤️",
       "todayTag": "Today",
-      "completeText": "The countdown is complete. We saw each other again ❤️",
+      "completeText": "The countdown is complete. Ü 'N ME again❤️.",
       "completeTag": "Complete"
     }
   },
@@ -96,13 +83,23 @@ window.HOUSE_CONFIG = {
       "source": "reunion"
     },
     {
-      "id": "daily-first",
+      "id": "decision-matrix-copy-mprdrekb",
+      "category": "Decisions",
+      "tag": "Priorities",
+      "type": "decisionMatrix",
+      "title": "Elke Dag",
+      "width": "span-8",
+      "enabled": true,
+      "source": "ElkeDag"
+    },
+    {
+      "id": "daily-first-copy-mprdc6o7",
       "category": "Today",
       "tag": "Checkcheck",
       "type": "checklist",
-      "title": "Do these first",
-      "width": "span-8",
-      "enabled": true,
+      "title": "Do these first copy",
+      "width": "span-4",
+      "enabled": false,
       "source": "daily"
     },
     {
@@ -125,34 +122,14 @@ window.HOUSE_CONFIG = {
       "enabled": true
     },
     {
-      "id": "red-flags",
-      "category": "Shopping",
-      "tag": "Shopping...",
-      "type": "redFlags",
-      "title": "Always check these in stock",
+      "id": "daily-first",
+      "category": "Today",
+      "tag": "Check Stocks",
+      "type": "checklist",
+      "title": "Kaufenn",
       "width": "span-3",
       "enabled": true,
-      "source": "shoppingStock"
-    },
-    {
-      "id": "red-flags-house",
-      "category": "Help",
-      "tag": "Home alerts",
-      "type": "redFlags",
-      "title": "House watchlist",
-      "width": "span-4",
-      "enabled": false,
-      "source": "houseAlerts"
-    },
-    {
-      "id": "red-flags-plants",
-      "category": "Plants",
-      "tag": "Plant check",
-      "type": "redFlags",
-      "title": "Plant warning signs",
-      "width": "span-4",
-      "enabled": false,
-      "source": "plantWatch"
+      "source": "ShoppingKaufen"
     },
     {
       "id": "recipes",
@@ -164,12 +141,32 @@ window.HOUSE_CONFIG = {
       "enabled": true
     },
     {
+      "id": "red-flags",
+      "category": "Shopping",
+      "tag": "Shopping...",
+      "type": "redFlags",
+      "title": "Always check these in stock",
+      "width": "span-6",
+      "enabled": true,
+      "source": "shoppingStock"
+    },
+    {
+      "id": "red-flags-copy-mprdvdun",
+      "category": "Shopping",
+      "tag": "Fix this",
+      "type": "redFlags",
+      "title": "Troubleshooting",
+      "width": "span-6",
+      "enabled": true,
+      "source": "troubleshooting"
+    },
+    {
       "id": "quick-actions",
       "category": "Notes",
       "tag": "Brainfarts",
       "type": "quickActions",
       "title": "Short Notes",
-      "width": "span-12",
+      "width": "span-7",
       "enabled": true
     },
     {
@@ -178,7 +175,7 @@ window.HOUSE_CONFIG = {
       "tag": "procedure",
       "type": "dailySop",
       "title": "Daily SOP",
-      "width": "span-6",
+      "width": "span-5",
       "enabled": true,
       "source": "dailySop"
     },
@@ -188,8 +185,8 @@ window.HOUSE_CONFIG = {
       "tag": "Priorities",
       "type": "decisionMatrix",
       "title": "Decisionssss",
-      "width": "span-6",
-      "enabled": true,
+      "width": "span-12",
+      "enabled": false,
       "source": "housePriorities"
     },
     {
@@ -199,7 +196,7 @@ window.HOUSE_CONFIG = {
       "type": "decisionMatrix",
       "title": "Decisions",
       "width": "span-6",
-      "enabled": true,
+      "enabled": false,
       "source": "housePriorities2"
     },
     {
@@ -277,6 +274,15 @@ window.HOUSE_CONFIG = {
       "title": "Little notes",
       "width": "span-6",
       "enabled": false
+    },
+    {
+      "id": "countdown-mpu0wep6",
+      "type": "countdown",
+      "category": "Love",
+      "title": "Countdown",
+      "width": "span-4",
+      "enabled": true,
+      "source": "reunion"
     }
   ],
   "content": {
@@ -284,16 +290,17 @@ window.HOUSE_CONFIG = {
       "reunion": {
         "targetDate": "2026-06-30",
         "initialText": "Counting down until we see each other again.",
-        "dateTag": "Days left",
+        "dateTag": "30 June",
         "almostTag": "Almost there",
-        "manyDaysText": "days until we see each other again.",
+        "manyDaysText": "dagen tot Ü 'N ME ❤️.",
+        "targetPrefix": "Target:",
         "daysLeftTag": "Days left",
-        "oneDayText": "day until we see each other again.",
+        "oneDayText": "dag tot Ü 'N ME ❤️.",
         "tomorrowText": "Tomorrow ❤️",
         "almostShortTag": "Almost",
-        "todayText": "days left. Today is the day we see each other again ❤️",
+        "todayText": "days left. Today is  Ü 'N ME ❤❤️",
         "todayTag": "Today",
-        "completeText": "The countdown is complete. We saw each other again ❤️",
+        "completeText": "The countdown is complete. Ü 'N ME again❤️.",
         "completeTag": "Complete"
       },
       "dateNight": {
@@ -315,6 +322,14 @@ window.HOUSE_CONFIG = {
         "completeText": "Homecoming countdown complete ❤️"
       }
     },
+    "ShoppingKaufen": [
+      "Muesli",
+      "Fromage Blanc",
+      "Koffie",
+      "Brood + Beleg",
+      "Gezonde snackies",
+      "Feeling Overwhelmed"
+    ],
     "daily": [
       "Open curtains and air the bedroom for 10 minutes.",
       "Keep the kitchen counter clear before bed.",
@@ -391,57 +406,170 @@ window.HOUSE_CONFIG = {
     ],
     "recipes": [
       {
-        "name": "Pasta pesto comfort bowl",
+        "name": "Pasta Pesto",
         "time": "15 min",
         "ingredients": [
           "Pasta",
-          "Pesto",
-          "Tomatoes",
-          "Cheese"
+          "Pesto (groen)",
+          "Cherry Tomaatjes",
+          "Geraspte kaas",
+          "Rucola (optioneel)"
         ],
         "steps": [
-          "Boil pasta.",
-          "Save a spoon of pasta water.",
-          "Mix pesto and pasta water.",
-          "Add tomatoes and cheese."
+          "Kook de pasta, giet daarna af",
+          "Mix de pesto in de pan met pasta",
+          "Voeg de tomaatjes toe",
+          "Serveer met de kaas (en evt rucola)"
         ],
-        "note": "Impossible to ruin, almost."
+        "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
       },
       {
-        "name": "Rice bowl",
+        "name": "Chilli con Carne",
+        "time": "30 min",
+        "ingredients": [
+          "Rijst",
+          "100ml Tomatenpuree",
+          "Blikje Mais",
+          "Blikje Bonen",
+          "Vriezer Gehakt",
+          "Vriezer UI",
+          "Vriezer Wortel",
+          "Vriezer Paprika"
+        ],
+        "steps": [
+          "Kook de rijst",
+          "Rul het gehakt met de ui",
+          "Voeg komijn (cumin) toe",
+          "Voeg gochujang/sambal/chili olie toe",
+          "Voeg de vriezer groente toe",
+          "Voeg de blikjes toe",
+          "Voeg een dikke eetlepel tomatenpuree toe",
+          "Serveer met liefde"
+        ],
+        "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
+      },
+      {
+        "name": "Spagetti Bolognese",
         "time": "20 min",
         "ingredients": [
-          "Rice",
-          "Egg or tofu",
-          "Vegetables",
-          "Soy sauce"
+          "Spagetti",
+          "100ml Tomatenpure",
+          "Vriezer Gehakt",
+          "Vriezer UI",
+          "Vriezer Wortel",
+          "Vriezer Paprika",
+          "Kaas (optioneel)",
+          "Rode Wijnazijn"
         ],
         "steps": [
-          "Cook rice.",
-          "Fry vegetables.",
-          "Add protein.",
-          "Finish with sauce."
+          "Kook de spagetti",
+          "Rul het gehakt met de ui",
+          "Voeg kruiden en zout toe",
+          "Voeg evt gochujang/sambal/chili olie toe",
+          "Voeg de vriezer groente toe",
+          "Voeg een dikke eetlepel tomatenpuree toe",
+          "Serveer met de rode wijnazijn"
         ],
-        "note": "Good fridge-cleaning meal."
+        "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
       },
       {
-        "name": "Oven wraps",
-        "time": "18 min",
+        "name": "Rijst met Tonijn",
+        "time": "8 min",
         "ingredients": [
-          "Wraps",
-          "Cheese",
-          "Beans/chicken",
-          "Vegetables"
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
         ],
         "steps": [
-          "Fill wraps.",
-          "Fold and place in oven dish.",
-          "Bake until warm and crispy."
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
         ],
-        "note": "Very good lazy dinner."
+        "note": "Add cheese or chives if you have them."
       },
       {
-        "name": "Quick scrambled eggs",
+        "name": "Pokebowl Zalm",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Lentejas",
+        "time": "8 min",
+        "ingredients": [
+          "Stokbroodje",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Kip met Rijst",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Asperge Kip",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Visschotel",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Broccoli schotel",
         "time": "8 min",
         "ingredients": [
           "Eggs",
@@ -479,97 +607,27 @@ window.HOUSE_CONFIG = {
         "description": "Jij stinkt. En kook met het brandalarm a.u.b."
       }
     ],
-    "redFlagLists": {
-      "shoppingStock": {
-        "intro": "Things that are annoying when they suddenly run out.",
-        "items": [
-          "Muesli",
-          "Yoghurt",
-          "Coffee",
-          "You feel overwhelmed"
-        ]
-      },
-      "houseAlerts": {
-        "intro": "These deserve attention before they become annoying.",
-        "items": [
-          {
-            "title": "Laundry smells damp",
-            "note": "Rewash it. Do not let it dry halfway in a pile."
-          },
-          {
-            "title": "Kitchen smells weird",
-            "note": "Check trash, sink, dishwasher filter area, and old food."
-          },
-          {
-            "title": "Unlocked door",
-            "note": "Lock it before sleeping or leaving."
-          },
-          {
-            "title": "You feel overwhelmed",
-            "note": "Only do kitchen counter, trash, and laundry-machine check. That already helps."
-          }
-        ]
-      },
-      "plantWatch": {
-        "items": [
-          {
-            "emoji": "🌱",
-            "title": "Plant looks sad",
-            "note": "Check soil first. Dry soil: small water. Wet soil: leave it alone."
-          },
-          {
-            "emoji": "🪰",
-            "title": "Tiny flies",
-            "note": "Let soil dry more and check for old wet plant matter."
-          },
-          {
-            "emoji": "☀️",
-            "title": "Leaves bleaching",
-            "note": "It may be too close to bright light."
-          }
-        ]
-      }
-    },
     "decisionMatrices": {
-      "housePriorities": [
+      "ElkeDag": [
         {
-          "label": "urgent",
+          "label": "'s ochtends",
           "labelClass": "warn",
-          "title": "Do now",
+          "title": "Tas Inpakken",
           "items": [
-            "Wet laundry",
-            "Weird smell",
-            "Unlocked door",
-            "Overflowing trash"
+            "Fruit Meenemen",
+            "Mij goedemorgen appen ❤️",
+            "Mij appen dat je veilig bent aangekomen ❤️"
           ]
         },
         {
-          "label": "optional",
+          "label": "'s avonds'",
           "labelClass": "ok",
-          "title": "Can wait",
+          "title": "Tas Uitpakken!!!",
           "items": [
-            "Vacuum if not dirty",
-            "Deep cleaning",
-            "Fancy cooking",
-            "Perfect organization"
-          ]
-        },
-        {
-          "label": "later",
-          "labelClass": "blue",
-          "title": "Later",
-          "items": [
-            "Sort old paperwork",
-            "Buy new plant pots"
-          ]
-        },
-        {
-          "label": "later",
-          "labelClass": "blue",
-          "title": "Later",
-          "items": [
-            "Sort old paperwork",
-            "Buy new plant pots"
+            "Sportkleding. Ja Tom. Je stinkt.",
+            "Flesje jus. Zet die in de week.",
+            "Brood smeren?",
+            "Mij Appen ❤️"
           ]
         }
       ],
@@ -586,7 +644,7 @@ window.HOUSE_CONFIG = {
           ]
         },
         {
-          "label": "urgent",
+          "label": "pp",
           "labelClass": "ok",
           "title": "Can wait",
           "items": [
@@ -607,7 +665,7 @@ window.HOUSE_CONFIG = {
         },
         {
           "label": "later",
-          "labelClass": "blue",
+          "labelClass": "ok",
           "title": "Later",
           "items": [
             "Sort old paperwork",
@@ -704,6 +762,60 @@ window.HOUSE_CONFIG = {
       "Future me will be very happy if the laundry machine is empty.",
       "Coffee is allowed. Chaos is negotiable. Mold is not.",
       "Thank you for taking care of our home ❤️"
-    ]
+    ],
+    "shoppingStock": [
+      "Muesli",
+      "Yoghhhurt",
+      "Coffee",
+      "You feel overwhelmed"
+    ],
+    "troubleshooting": [
+      {
+        "problem": "Laundry smells damp",
+        "fix": "Rewash it. Do not let it dry halfway in a pile."
+      },
+      {
+        "problem": "Kitchen smells weird",
+        "fix": "Check trash, sink, dishwasher filter area, and old food."
+      },
+      {
+        "problem": "Plant looks sad",
+        "fix": "Check soil first. Dry soil: small water. Wet soil: leave it alone."
+      },
+      {
+        "problem": "You feel overwhelmed",
+        "fix": "Do only kitchen counter, trash, and laundry-machine check. That already helps."
+      }
+    ],
+    "redFlagLists": {
+      "shoppingStock": {
+        "items": [
+          "Muesli",
+          "Yoghhhurt",
+          "Coffee",
+          "You feel overwhelmed"
+        ]
+      },
+      "troubleshooting": {
+        "items": [
+          {
+            "problem": "Laundry smells damp",
+            "fix": "Rewash it. Do not let it dry halfway in a pile."
+          },
+          {
+            "problem": "Kitchen smells weird",
+            "fix": "Check trash, sink, dishwasher filter area, and old food."
+          },
+          {
+            "problem": "Plant looks sad",
+            "fix": "Check soil first. Dry soil: small water. Wet soil: leave it alone."
+          },
+          {
+            "problem": "You feel overwhelmed",
+            "fix": "Do only kitchen counter, trash, and laundry-machine check. That already helps."
+          }
+        ]
+      }
+    }
   }
 };

@@ -100,3 +100,24 @@ Logo refinement v4: the stain/logo now uses a larger CSS canvas with pixel-based
 
 
 Latest logo update: the header CSS logo is slightly smaller, an SVG favicon is included at `assets/favicon.svg`, and a smaller matching CSS logo appears on the left side of the footer on small screens where the hero logo is hidden.
+
+
+Footer logo update: the footer mark now uses the same no-square-clipping, pixel-based circle construction as the header logo and is visible on large screens as well as small screens.
+
+Small-screen footer fix: the footer logo now keeps the full internal drawing canvas and scales down without shrinking the drawing box itself, preventing the small-screen clipping/cut-off effect.
+
+Hero logo scaling update: the hero logo now uses the same large-canvas + visual-scale approach as the footer logo, keeping the current visible size while making future scaling less prone to square clipping.
+
+Hero size tweak: the hero logo is scaled slightly smaller and nudged down a bit so it no longer gets cut off at the top edge.
+
+Logo canvas unification: the hero and footer logos now use the same 525 x 430 CSS gradient geometry. The hero is nudged down and scaled a little smaller to avoid top clipping, and the footer logo is drawn in pseudo-elements instead of as a clipped background so the bottom no longer gets cut off.
+
+Splatters update: the splash dots are now drawn inside the same logo canvas as the main rings, instead of on a separate pseudo-element outside the frame. This keeps them within bounds and makes them scale together with both the hero and footer logos.
+
+
+Reference splatter update: the logo splatters are now drawn inside the shared CSS logo canvas in positions closer to the reference image, with larger top-left paint drops, a lower-left stain/drop, and a lower-right paint cluster. The footer logo remains CSS-only and is not an image asset.
+
+
+Content merge update: this version keeps the current app/CSS/logo implementation, but imports the older exported config's visible content and frame order. Older red-flag flat lists were converted into `content.redFlagLists` sources, and older checklist `limit` fields were removed so checklists remain unlimited.
+
+Logo micro-tweak: moved the large top-left pink splatter slightly inward so a little more yellow remains visible around the upper-left edge of the main circle.
