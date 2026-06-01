@@ -58,7 +58,7 @@ window.HOUSE_CONFIG = {
       "copySuffix": "copy",
       "customFramePlaceholder": "<p>A custom frame. Edit this in the exported config.</p>"
     },
-    "footerNote": "Binnenkort zullen we snel weer koffie saampies drinken, Poetsjiepoeh. MWAH, hou je taai Poekie! <3 <3  c==3",
+    "footerNote": "Privacy reminder: do not publish exact away-dates, address, alarm codes, spare-key locations, or Wi‑Fi passwords on a public GitHub Pages site.",
     "countdown": {
       "initialText": "Counting down until we see each other again.",
       "dateTag": "30 June",
@@ -134,7 +134,7 @@ window.HOUSE_CONFIG = {
     {
       "id": "laundry",
       "category": "Instructions",
-      "tag": "Instructions de la machine à láver",
+      "tag": "Instructions de machine lávier",
       "type": "laundry",
       "title": "wasnadatwaswas",
       "titleMode": "clip",
@@ -420,6 +420,39 @@ window.HOUSE_CONFIG = {
         "avoid": "Dry fully before putting away."
       }
     ],
+    "laundry": [
+      {
+        "load": "Normal clothes",
+        "temp": "30–40°C",
+        "detergent": "Normal detergent",
+        "avoid": ["Avoid mixing bright colors with whites.","Avoid mixing dark colors with whites."]
+          // "avoid":
+      },
+      {
+        "load": "Towels",
+        "temp": "60°C",
+        "detergent": "Normal detergent",
+        "avoid": "Do not overload; towels need space."
+      },
+      {
+        "load": "Delicates / nice shirts",
+        "temp": "30°C gentle",
+        "detergent": "Small amount",
+        "avoid": "Do not tumble dry unless label says yes."
+      },
+      {
+        "load": "Bedding",
+        "temp": "40–60°C",
+        "detergent": "Normal detergent",
+        "avoid": "Dry fully before putting away."
+      },
+      {
+        "load": "Bedding",
+        "temp": "40–60°C",
+        "detergent": "Normal detergent",
+        "avoid": "Dry fully before putting away."
+      }
+    ],
     "recipes": [
       {
         "name": "Pasta Pesto",
@@ -587,22 +620,6 @@ window.HOUSE_CONFIG = {
       {
         "name": "Broccoli schotel",
         "time": "8 min",
-        "ingredients": [
-          "Eggs",
-          "Butter",
-          "Salt",
-          "Pepper"
-        ],
-        "steps": [
-          "Whisk eggs.",
-          "Melt butter in pan.",
-          "Cook gently, stirring often."
-        ],
-        "note": "Add cheese or chives if you have them."
-      },
-      {
-        "name": "Bobotie ",
-        "time": "45 min",
         "ingredients": [
           "Eggs",
           "Butter",

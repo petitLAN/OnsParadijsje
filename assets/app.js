@@ -10,7 +10,7 @@
   const DEFAULT_FRAME_TYPES = {
     countdown: "Countdown",
     checklist: "Checklist",
-    consistency: "Schoonmaken",
+    consistency: "Consistency levels",
     laundry: "Laundry guide",
     redFlags: "Red flags",
     recipes: "Recipes",
@@ -192,12 +192,48 @@
     return renderShell(frame, rows, "status frame");
   }
 
+  function normalizeTextList(value) {
+    if (Array.isArray(value)) {
+      return value
+        .map(item => String(item ?? "").trim())
+        .filter(Boolean);
+    }
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      return trimmed ? [trimmed] : [];
+    }
+    return [];
+  }
+
+  function renderAvoidBlock(item) {
+    // Preferred for multiple avoids: avoid: ["...", "..."]
+    // Also accepted: avoids: ["...", "..."]
+    // Legacy single-string avoid still works. Empty/missing values render nothing.
+    const avoids = [
+      ...normalizeTextList(item.avoid),
+      ...normalizeTextList(item.avoids)
+    ];
+
+    if (!avoids.length) return "";
+
+    if (avoids.length === 1) {
+      return `<p><strong>Avoid:</strong> ${esc(avoids[0])}</p>`;
+    }
+
+    return `
+      <div class="laundry-avoid">
+        <p><strong>Avoid:</strong></p>
+        <ul class="clean">${avoids.map(avoid => `<li>${esc(avoid)}</li>`).join("")}</ul>
+      </div>
+    `;
+  }
+
   function renderLaundry(frame) {
     const html = (config.content.laundry || []).map(item => `
       <details>
         <summary>${esc(item.load)} — ${esc(item.temp)}</summary>
-        <p><strong>Was spul:</strong> ${esc(item.detergent)}</p>
-        <p><strong>Let op!</strong> ${esc(item.avoid)}</p>
+        <p><strong>Detergent:</strong> ${esc(item.detergent)}</p>
+        ${renderAvoidBlock(item)}
       </details>
     `).join("");
     return renderShell(frame, html, "instruction frame");

@@ -132,3 +132,29 @@ Hero logo overlap update: added a responsive overlap-safe mode. When the hero lo
 Hero logo threshold update: tightened the overlap-safe breakpoint from 1280px to 1160px, so the logo returns to the bright/full version earlier and the dimmed mode is closer to the actual overlap zone.
 
 Hero logo threshold retune: added a softer transition zone at 1240px and kept a stronger overlap-safe mode at 1160px. This avoids the logo becoming fully bright while overlap is still happening, without returning to the overly conservative 1280px behavior.
+
+
+## Laundry avoid lines
+
+Laundry items support optional avoid instructions. Use one string, an array, or omit it entirely:
+
+```js
+{
+  load: "Delicates",
+  temp: "30°C gentle",
+  detergent: "Small amount",
+  avoid: [
+    "Do not tumble dry unless label says yes.",
+    "Dry flat if it looks fragile."
+  ]
+}
+
+{
+  load: "Simple rinse",
+  temp: "Cold",
+  detergent: "Tiny amount"
+  // no avoid line will be rendered
+}
+```
+
+A JavaScript object cannot contain the same key twice, so do **not** write two `avoid:` keys in the same item. Use `avoid: ["first", "second"]` or `avoids: ["first", "second"]` instead.

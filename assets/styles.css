@@ -356,3 +356,12 @@ p{color:var(--cream);line-height:1.58;font-weight:750}.small{font-size:13px}.tin
 .bottom-layout-editor{
   margin-bottom:28px;
 }
+
+/* Laundry cards: optional multi-line avoid lists.
+   If avoid/avoids is empty or missing, the Avoid row is not rendered. */
+.laundry-avoid p{
+  margin-bottom:4px;
+}
+.laundry-avoid ul.clean{
+  margin-top:4px;
+}
