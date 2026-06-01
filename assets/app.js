@@ -69,7 +69,6 @@
     article.innerHTML = `
       <div class="frame-card-head">
         <div>
-          <div class="frame-tags"><span class="tag blue">${esc(typeLabel || FRAME_TYPES[frame.type] || frame.type)}</span></div>
           <h2>${esc(frame.title || FRAME_TYPES[frame.type] || "Frame")}</h2>
         </div>
         <span class="frame-handle" title="Frame module">▦</span>
@@ -82,8 +81,7 @@
     const targetDate = frame.targetDate || config.meta.countdownTarget;
     return renderShell(frame, `
       <div class="big-number" data-countdown-days data-target-date="${esc(targetDate)}">--</div>
-      <p data-countdown-text>Counting down until we see each other again.</p>
-      <span class="tag ok" data-countdown-tag>30 June</span><span class="tag warn">Almost there</span>
+      <p data-countdown-text>days until we see each other again.</p>
     `, "dynamic frame");
   }
 
@@ -339,23 +337,22 @@
       const targetDay = new Date(target.getFullYear(), target.getMonth(), target.getDate());
       const msPerDay = 24 * 60 * 60 * 1000;
       const dayDiff = Math.ceil((targetDay - today) / msPerDay);
-      const label = target.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
       if (dayDiff > 1) {
         daysEl.textContent = dayDiff;
-        textEl.innerHTML = `days until we see each other again.<span class="countdown-date">Target: ${esc(label)}</span>`;
-        tagEl.textContent = "Days left";
+        textEl.innerHTML = "days until we see each other again.";
+        if (tagEl) tagEl.textContent = "Days left";
       } else if (dayDiff === 1) {
         daysEl.textContent = "1";
-        textEl.innerHTML = `day until we see each other again.<span class="countdown-date">Tomorrow ❤️</span>`;
-        tagEl.textContent = "Almost";
+        textEl.innerHTML = "day until we see each other again.";
+        if (tagEl) tagEl.textContent = "Almost";
       } else if (dayDiff === 0) {
         daysEl.textContent = "0";
-        textEl.innerHTML = "days left. Today is the day we see each other again ❤️";
-        tagEl.textContent = "Today";
+        textEl.innerHTML = "days left. Today is the day ❤️";
+        if (tagEl) tagEl.textContent = "Today";
       } else {
         daysEl.textContent = "0";
-        textEl.innerHTML = "The countdown is complete. We saw each other again ❤️";
-        tagEl.textContent = "Complete";
+        textEl.innerHTML = "The countdown is complete ❤️";
+        if (tagEl) tagEl.textContent = "Complete";
       }
     });
   }

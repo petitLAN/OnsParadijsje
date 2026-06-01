@@ -111,3 +111,8 @@ Open the website and click **Edit layout**. You can move, hide, remove, duplicat
 ## Font update
 
 This version uses Inter for body text, Inter for h1/h2/h3/h4 headings, and Inter for the countdown number and quick-action card titles. Category labels are kept in `config.js` for organization but are no longer displayed on the dashboard cards.
+
+
+## Latest UI tweak
+
+Frame type labels are hidden on the public dashboard. The countdown still uses `countdownTarget` in `assets/config.js`, but the page only shows the number of days and does not display the target date.

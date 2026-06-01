@@ -16,8 +16,8 @@
 window.HOUSE_CONFIG = {
   meta: {
     title: "Ons Paradijsje",
-    subtitle: "Eat. Sleep. Janken. Repeat. Althans, totdat ik weer terugkom om jouw huisvrouwtje te zijn.",
-    greeting: "Hallow Poetsjiepoeh c3 dit zijn niet per se de huisregels, gewoon een uitgebreide todo lijst wat ik zoal doe als jij druk geld verdient. Of soms ook niet doe... ",
+    subtitle: "Sip. Savor. Score. A bold little dashboard for keeping the house playful, clean, and under control.",
+    greeting: "Hi love — this is not a rulebook, just the little things that keep the house feeling like home.",
     heroLabel: "Modular house dashboard",
     countdownTarget: "2026-06-30"
   },
