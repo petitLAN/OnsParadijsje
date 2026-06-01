@@ -1,6 +1,6 @@
 # Ons Paradijsje
 
-**Current recommended version:** `v0.18.0`  
+**Current recommended version:** `v0.20.0`  
 **Project type:** static modular dashboard website  
 **Primary entry point:** `index.html`  
 **Main editable file:** `assets/config.js`  
