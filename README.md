@@ -97,3 +97,6 @@ Logo refinement: the two yellow circles are now drawn as concentric layers under
 
 
 Logo refinement v4: the stain/logo now uses a larger CSS canvas with pixel-based concentric circle layers, preventing the yellow border from being clipped into straight square edges.
+
+
+Latest logo update: the header CSS logo is slightly smaller, an SVG favicon is included at `assets/favicon.svg`, and a smaller matching CSS logo appears on the left side of the footer on small screens where the hero logo is hidden.
