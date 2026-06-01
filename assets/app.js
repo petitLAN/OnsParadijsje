@@ -1,5 +1,5 @@
 (() => {
-  const STORAGE_KEY = "ons-paradijsje-modular-layout-v2";
+  const STORAGE_KEY = "ons-paradijsje-modular-layout-v3";
   const config = structuredClone(window.HOUSE_CONFIG);
   let layout = loadLayout();
   const dashboard = document.getElementById("dashboard");
@@ -15,6 +15,8 @@
     redFlags: "Red flags",
     recipes: "Recipes",
     quickActions: "Quick actions",
+    dailySop: "Daily SOP",
+    decisionMatrix: "Decision matrix",
     rooms: "Room map",
     dayflow: "Dayflow",
     kanban: "Kanban",
@@ -149,6 +151,30 @@
     return renderShell(frame, html, "action frame");
   }
 
+  function renderDailySop(frame) {
+    const source = frame.source || "dailySop";
+    let items = config.content[source] || config.content.daily || [];
+    if (Number.isFinite(frame.limit)) items = items.slice(0, frame.limit);
+    const html = `<ol class="procedure">${items.map(item => `<li>${esc(item)}</li>`).join("")}</ol>`;
+    return renderShell(frame, html, "procedure frame");
+  }
+
+  function renderDecisionMatrix(frame) {
+    const matrix = config.content.decisionMatrix || {};
+    const columns = Array.isArray(matrix) ? matrix : [
+      { title: "Do now", tag: "urgent", items: matrix.doNow || [] },
+      { title: "Can wait", tag: "optional", items: matrix.canWait || [] }
+    ];
+    const html = `<div class="matrix">${columns.map(column => `
+      <article class="matrix-card">
+        <span class="tag ${String(column.tag || "").toLowerCase().includes("urgent") ? "warn" : "ok"}">${esc(column.tag || column.title)}</span>
+        <h3>${esc(column.title)}</h3>
+        ${list(column.items || [])}
+      </article>`).join("")}
+    </div>`;
+    return renderShell(frame, html, "decision frame");
+  }
+
   function renderRooms(frame) {
     const html = `<div class="room-grid">${(config.content.rooms || []).map((room, index) => `
       <article class="room-tile">
@@ -197,6 +223,8 @@
     redFlags: renderRedFlags,
     recipes: renderRecipes,
     quickActions: renderQuickActions,
+    dailySop: renderDailySop,
+    decisionMatrix: renderDecisionMatrix,
     rooms: renderRooms,
     dayflow: renderDayflow,
     kanban: renderKanban,
@@ -266,6 +294,8 @@
       redFlags: "Help",
       recipes: "Food",
       quickActions: "Actions",
+      dailySop: "Routine",
+      decisionMatrix: "Decisions",
       rooms: "Rooms",
       dayflow: "Routine",
       kanban: "Routine",
@@ -279,6 +309,8 @@
       customHtml: "span-6",
       recipes: "span-12",
       quickActions: "span-12",
+      dailySop: "span-6",
+      decisionMatrix: "span-6",
       rooms: "span-12",
       dayflow: "span-12",
       kanban: "span-12"
@@ -289,6 +321,7 @@
     const id = `${slug(type)}-${Date.now().toString(36)}`;
     const frame = { id, type, category: defaultCategory(type), title: FRAME_TYPES[type] || "New frame", width: defaultWidth(type), enabled: true };
     if (type === "checklist") frame.source = "daily";
+    if (type === "dailySop") frame.source = "dailySop";
     if (type === "countdown") frame.targetDate = config.meta.countdownTarget;
     if (type === "customHtml") frame.html = "<p>A custom frame. Edit this in the exported config.</p>";
     layout.push(frame);

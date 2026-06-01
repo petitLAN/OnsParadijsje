@@ -9,6 +9,8 @@
   To change card width: use span-3, span-4, span-5, span-6, span-7, span-8, or span-12.
   To group frames: set category, for example category: "Food" or category: "Actions".
   To add quick action cards: use type: "quickActions" and edit content.quickActions.
+  To add the numbered operations list: use type: "dailySop" and edit content.dailySop.
+  To add the do-now/can-wait matrix: use type: "decisionMatrix" and edit content.decisionMatrix.
   To add a custom frame: use type: "customHtml" and put your HTML in html.
 */
 window.HOUSE_CONFIG = {
@@ -28,6 +30,8 @@ window.HOUSE_CONFIG = {
     { id: "red-flags", category: "Help", type: "redFlags", title: "Red flags", width: "span-3", enabled: true },
     { id: "recipes", category: "Food", type: "recipes", title: "Easy food cards", width: "span-12", enabled: true },
     { id: "quick-actions", category: "Actions", type: "quickActions", title: "Quick actions", width: "span-12", enabled: true },
+    { id: "daily-sop", category: "Routine", type: "dailySop", title: "Daily SOP", width: "span-6", enabled: true, source: "dailySop" },
+    { id: "decision-matrix", category: "Decisions", type: "decisionMatrix", title: "Decision matrix", width: "span-6", enabled: true },
 
     /* Extra frames are included but disabled, so you can enable/copy them later. */
     { id: "rooms", category: "Rooms", type: "rooms", title: "Room map", width: "span-12", enabled: false },
@@ -38,6 +42,14 @@ window.HOUSE_CONFIG = {
 
   content: {
     daily: [
+      "Open curtains and air the bedroom for 10 minutes.",
+      "Keep the kitchen counter clear before bed.",
+      "Check dishwasher: start it or empty it if needed.",
+      "Make sure laundry is not forgotten in the washing machine.",
+      "Lock the front door before sleeping."
+    ],
+
+    dailySop: [
       "Open curtains and air the bedroom for 10 minutes.",
       "Keep the kitchen counter clear before bed.",
       "Check dishwasher: start it or empty it if needed.",
@@ -91,6 +103,11 @@ window.HOUSE_CONFIG = {
       { problem: "Plant looks sad", fix: "Check soil first. Dry soil: small water. Wet soil: leave it alone." },
       { problem: "You feel overwhelmed", fix: "Do only kitchen counter, trash, and laundry-machine check. That already helps." }
     ],
+
+    decisionMatrix: {
+      doNow: ["Wet laundry", "Weird smell", "Unlocked door", "Overflowing trash"],
+      canWait: ["Vacuum if not dirty", "Deep cleaning", "Fancy cooking", "Perfect organization"]
+    },
 
     rooms: [
       { name: "Kitchen", emoji: "🍳", status: "Needs nightly reset", notes: ["Wipe the counter after cooking.", "Food scraps go in the right bin.", "Do not leave pans soaking forever."] },

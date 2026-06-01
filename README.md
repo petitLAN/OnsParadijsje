@@ -21,7 +21,7 @@ Categories do not restrict layout. They are labels to help you keep track of rep
 
 ## Quick action cards
 
-The dashboard now supports a `quickActions` frame type. The quick-action cards are controlled by `content.quickActions`:
+The dashboard supports a `quickActions` frame type. The quick-action cards are controlled by `content.quickActions`:
 
 ```js
 quickActions: [
@@ -30,6 +30,17 @@ quickActions: [
 ```
 
 The `targetFrameId` scrolls to the frame with that id.
+
+## Ops-board frames
+
+The modular project now also supports the two Ops Board elements as standalone frames:
+
+```js
+{ id: "daily-sop", category: "Routine", type: "dailySop", title: "Daily SOP", width: "span-6", enabled: true, source: "dailySop" },
+{ id: "decision-matrix", category: "Decisions", type: "decisionMatrix", title: "Decision matrix", width: "span-6", enabled: true }
+```
+
+Edit `content.dailySop` for the numbered standard operating procedure. Edit `content.decisionMatrix.doNow` and `content.decisionMatrix.canWait` for the decision matrix columns.
 
 ## How to reorder cards
 
@@ -84,6 +95,8 @@ On mobile, all cards automatically become full-width.
 - `redFlags`
 - `recipes`
 - `quickActions`
+- `dailySop`
+- `decisionMatrix`
 - `rooms`
 - `dayflow`
 - `kanban`
