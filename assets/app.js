@@ -66,6 +66,10 @@
       frame.title = frame.title || FRAME_TYPES[frame.type] || `Frame ${index + 1}`;
       frame.width = frame.width || defaultWidth(frame.type);
 
+      // Checklist frames no longer support a max-item limit. Removing it here
+      // keeps old browser-saved layouts and exported config files clean.
+      if (frame.type === "checklist") delete frame.limit;
+
       const baseId = slug(frame.id || `${frame.type}-${index + 1}`);
       const count = seen.get(baseId) || 0;
       seen.set(baseId, count + 1);
@@ -148,11 +152,29 @@
     `, "countdown frame");
   }
 
+  function normalizeChecklistItems(value) {
+    if (Array.isArray(value)) return value;
+    if (Array.isArray(value?.items)) return value.items;
+    if (Array.isArray(value?.points)) return value.points;
+    if (Array.isArray(value?.tasks)) return value.tasks;
+    return [];
+  }
+
   function renderChecklist(frame) {
     const source = frame.source || "daily";
-    let items = config.content[source] || [];
-    if (Number.isFinite(frame.limit)) items = items.slice(0, frame.limit);
-    return renderShell(frame, checklist(items, frame.id), "checklist frame");
+
+    // Checklist cards are intentionally unlimited: every item in the configured
+    // source array is rendered. Older exported layouts may still contain
+    // limit: 5, but checklist frames ignore it so localStorage cannot keep
+    // hiding new items after you add them to config.js.
+    const sourceData =
+      frame.items ||
+      frame.content?.items ||
+      config.content?.checklists?.[source] ||
+      config.content?.[source] ||
+      [];
+
+    return renderShell(frame, checklist(normalizeChecklistItems(sourceData), frame.id), "checklist frame");
   }
 
   function renderConsistency(frame) {
@@ -178,10 +200,50 @@
     return renderShell(frame, html, "instruction frame");
   }
 
-  function renderRedFlags(frame) {
+  function normalizeRedFlagBlock(frame) {
     const source = frame.source || "shoppingStock";
-    const items = config.content[source] || (config.content.troubleshooting || []).map(item => item.problem);
-    return renderShell(frame, list(items), "alert frame");
+    const library = config.content?.redFlagLists || {};
+
+    // Preferred formats:
+    // 1) frame.content / frame.items for fully inline per-frame lists.
+    // 2) content.redFlagLists[source] for reusable named lists.
+    // 3) content[source] as a legacy fallback for older config files.
+    const sourceData =
+      frame.content ||
+      (Array.isArray(frame.items) ? { items: frame.items } : null) ||
+      library[source] ||
+      config.content?.[source] ||
+      (source === "troubleshooting" ? config.content?.troubleshooting : null) ||
+      [];
+
+    const block = Array.isArray(sourceData) ? { items: sourceData } : (sourceData || {});
+    const rawItems = block.items || block.points || block.list || block.warnings || [];
+
+    return {
+      intro: block.intro || block.note || "",
+      items: Array.isArray(rawItems) ? rawItems.filter(Boolean) : []
+    };
+  }
+
+  function redFlagItem(item) {
+    if (typeof item === "string") return `<li>${esc(item)}</li>`;
+    if (!item || typeof item !== "object") return "";
+
+    const title = item.title || item.text || item.label || item.problem || item.name || "";
+    const detail = item.detail || item.note || item.fix || item.description || "";
+    const emoji = item.emoji ? `${esc(item.emoji)} ` : "";
+
+    return `<li>${title ? `<strong>${emoji}${esc(title)}</strong>` : ""}${detail ? `<span class="red-flag-detail">${esc(detail)}</span>` : ""}</li>`;
+  }
+
+  function redFlagList(items) {
+    return `<ul class="clean red-flag-list">${(items || []).map(redFlagItem).join("")}</ul>`;
+  }
+
+  function renderRedFlags(frame) {
+    const block = normalizeRedFlagBlock(frame);
+    const intro = block.intro ? `<p class="red-flag-note">${esc(block.intro)}</p>` : "";
+    return renderShell(frame, `${intro}${redFlagList(block.items)}`, "alert frame");
   }
 
   function recipeCard(recipe) {
@@ -194,7 +256,7 @@
   }
 
   function renderRecipes(frame) {
-    const html = `<div class="mini-grid">${(config.content.recipes || []).map(recipeCard).join("")}</div>`;
+    const html = `<div class="mini-grid recipe-grid">${(config.content.recipes || []).map(recipeCard).join("")}</div>`;
     return renderShell(frame, html, "recipe frame");
   }
 
@@ -321,7 +383,7 @@
     const html = `
       <div class="time-block"><div class="time-pill">Morning</div><div class="plain-card"><h3>Fresh start</h3>${checklist((config.content.daily || []).slice(0, 2), frame.id + "-morning")}</div></div>
       <div class="time-block"><div class="time-pill">Anytime</div><div class="plain-card"><h3>Maintenance</h3>${checklist((config.content.everyFewDays || []).slice(0, 3), frame.id + "-anytime")}</div></div>
-      <div class="time-block"><div class="time-pill">Dinner</div><div class="plain-card"><h3>Food</h3><div class="mini-grid">${(config.content.recipes || []).map(recipeCard).join("")}</div></div></div>
+      <div class="time-block"><div class="time-pill">Dinner</div><div class="plain-card"><h3>Food</h3><div class="mini-grid recipe-grid">${(config.content.recipes || []).map(recipeCard).join("")}</div></div></div>
       <div class="time-block"><div class="time-pill">Evening</div><div class="plain-card"><h3>Close-down routine</h3>${checklist((config.content.daily || []).slice(2), frame.id + "-evening")}</div></div>`;
     return renderShell(frame, html, "timeline frame");
   }
@@ -456,6 +518,10 @@
     const frame = { id, type, category: defaultCategory(type), title: FRAME_TYPES[type] || "New frame", width: defaultWidth(type), enabled: true };
     if (type === "checklist") frame.source = "daily";
     if (type === "dailySop") frame.source = "dailySop";
+    if (type === "redFlags") {
+      const firstRedFlagListKey = Object.keys(config.content?.redFlagLists || {})[0];
+      frame.source = firstRedFlagListKey || "shoppingStock";
+    }
     if (type === "countdown") {
       const firstCountdownKey = Object.keys(config.content?.countdowns || {})[0];
       frame.source = firstCountdownKey || "";
@@ -533,8 +599,12 @@
   }
 
   function buildConfigFile() {
-    const exported = structuredClone(config);
-    exported.layout = layout;
+    const exported = sanitizeForExport(structuredClone(config));
+    exported.layout = normalizeLayout(layout).map(frame => {
+      const cleanFrame = sanitizeForExport(frame);
+      if (cleanFrame.type === "checklist") delete cleanFrame.limit;
+      return cleanFrame;
+    });
     return `/* Exported from Ons Paradijsje modular dashboard */\nwindow.HOUSE_CONFIG = ${JSON.stringify(exported, null, 2)};\n`;
   }
 

@@ -40,3 +40,47 @@ Then the layout frame points at it with:
 ```js
 { type: "decisionMatrix", source: "housePriorities" }
 ```
+
+
+## Checklist cards
+
+Checklist frames render every item in their configured source array. For example, the `daily-first` frame uses `source: "daily"`, so it displays all entries in `content.daily`. Add or remove as many strings as you need; there is no five-item cap. Older exported layouts that still contain `limit: 5` are ignored for checklist frames and cleaned from newly exported `config.js` files.
+
+
+## Modular red-flag / simple-list cards
+
+`redFlags` frames are now source-based, just like countdowns and decision matrices. The frame decides which named list to render:
+
+```js
+{
+  id: "red-flags",
+  type: "redFlags",
+  title: "Always check these in stock",
+  tag: "Shopping...",
+  source: "shoppingStock"
+}
+```
+
+The content lives in `content.redFlagLists`:
+
+```js
+redFlagLists: {
+  shoppingStock: {
+    intro: "Things that are annoying when they suddenly run out.",
+    items: ["Muesli", "Yoghurt", "Coffee"]
+  },
+  houseAlerts: {
+    items: [
+      { title: "Laundry smells damp", note: "Rewash it." },
+      { title: "Kitchen smells weird", note: "Check trash and sink." }
+    ]
+  }
+}
+```
+
+So duplicated `redFlags` cards no longer have to show the same list. Give each frame a different `source`, then add/edit that matching list under `content.redFlagLists`. Inline per-frame lists are also supported with `content: { items: [...] }` or `items: [...]` on the frame itself.
+
+
+## Recipe display width
+
+Recipe cards use `class="mini-grid recipe-grid"`. The `.recipe-grid` CSS caps recipes at a maximum of four cards next to each other, while still wrapping responsively on smaller screens.
