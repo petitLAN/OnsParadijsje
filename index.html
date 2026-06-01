@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>House Dashboard Proposal Lab</title>
+  <style>
+    :root {
+      --bg: #3f55a6;
+      --paper: #3f55a6;
+      --paper-2: #2f407f;
+      --ink: #ffffff;
+      --muted: #fff3db;
+      --line: rgba(255, 243, 219, .28);
+      --accent: #ff2bbd;
+      --accent-2: #ecff19;
+      --accent-3: #ffb083;
+      --warn: #ffb083;
+      --danger: #ff6b6b;
+      --ok: #ecff19;
+      --soft: rgba(236, 255, 25, .16);
+      --shadow: 0 22px 70px rgba(13, 18, 57, .34);
+      --radius: 34px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 86% 10%, rgba(236, 255, 25, .23) 0, transparent 18rem),
+        radial-gradient(circle at 12% 92%, rgba(255, 43, 189, .21) 0, transparent 22rem),
+        linear-gradient(180deg, #3f55a6 0%, #35498f 55%, #2f407f 100%);
+      min-height: 100vh;
+    }
+    button, textarea {
+      width: 100%; min-height: 360px; resize: vertical;
+      margin-top: 10px; padding: 14px;
+      border: 3px solid var(--accent-2); border-radius: 22px;
+      background: #283874; color: #fff3db;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px; line-height: 1.45;
+      box-shadow: inset 0 0 0 2px rgba(255, 43, 189, .35);
+    }
+    .topbar { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; cursor: default; font-weight: 950; font-size: 12px; background: #ff2bbd; color: white; border-color: #ffb083; }
+    .chip.dark { background: var(--accent-2); color: #ff2bbd; border-color: white; }
+    .preview-wrap.mobile {
+      max-width: 430px; margin: 0 auto; border: 10px solid #201c19; border-radius: 40px;
+      overflow: hidden; background: var(--bg); box-shadow: 0 26px 80px rgba(0,0,0,.2);
+    }
+    .hero {
+      position: relative; overflow: hidden;
+      min-height: 300px;
+      padding: clamp(30px, 4.5vw, 58px);
+      border: 0;
+      border-radius: 0 0 46px 46px;
+      background:
+        linear-gradient(90deg, rgba(53, 76, 159, .92), rgba(53, 76, 159, .7)),
+        repeating-linear-gradient(135deg, rgba(255,255,255,.15) 0 2px, transparent 2px 22px),
+        #354c9f;
+      box-shadow: var(--shadow); margin-bottom: 26px;
+    }
+    .hero:before {
+      content: "HOUSE RULES";
+      position: absolute; right: 36px; top: 30px;
+      width: 144px; height: 144px; border-radius: 50%;
+      display: grid; place-items: center; text-align: center;
+      background: var(--accent-2); color: #ff2bbd;
+      font-weight: 950; font-size: 22px; line-height: .9;
+      box-shadow: 0 0 0 8px #ff2bbd, 0 0 0 14px var(--accent-2), 0 12px 0 #26356e;
+      transform: rotate(5deg);
+    }
+    .hero:after {
+      content: ""; position: absolute; left: 28px; bottom: 24px;
+      width: min(42vw, 420px); height: 110px;
+      border-radius: 38px;
+      background: linear-gradient(90deg, #fff3db 0 23%, transparent 23% 28%, #fff3db 28% 55%, transparent 55% 60%, #fff3db 60% 100%);
+      opacity: .16;
+    }
+    .hero > * { position: relative; z-index: 1; max-width: 760px; }
+    .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+    .card {
+      background: #354c9f;
+      border: 4px solid #fff3db;
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 12px 12px 0 rgba(255, 43, 189, .86), 0 18px 45px rgba(13, 18, 57, .22);
+    }
+    .plain-card { background: #fff3db; color: #354c9f; border: 4px solid #ffb083; border-radius: 26px; padding: 17px; box-shadow: 8px 8px 0 #ff2bbd; }
+    .plain-card p, .plain-card .small, .plain-card li { color: #354c9f; }
+    .plain-card h4 { color: #ff2bbd; text-shadow: none; }
+    .span-3 { grid-column: span 3; } .span-4 { grid-column: span 4; } .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; } .span-7 { grid-column: span 7; } .span-8 { grid-column: span 8; } .span-12 { grid-column: span 12; }
+    ul.clean, ol.clean { margin: 12px 0 0; padding-left: 20px; }
+    li { margin: 7px 0; line-height: 1.45; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 7px 10px; border-radius: 999px;
+      background: var(--accent-2); color: #ff2bbd;
+      font-size: 12px; font-weight: 950; margin: 4px 4px 0 0;
+      text-transform: uppercase; letter-spacing: .08em;
+      border: 2px solid white;
+    }
+    .tag.ok { background: var(--accent-2); color: #354c9f; }
+    .tag.warn { background: #ffb083; color: #354c9f; }
+    .tag.blue { background: #ff2bbd; color: white; }
+    .check label {
+      display: flex; gap: 11px; align-items: flex-start;
+      padding: 13px 0; border-bottom: 2px dashed rgba(255, 243, 219, .35); color: white;
+      font-weight: 850;
+    }
+    input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent-2); margin-top: 1px; }
+    details { background: #fff3db; color: #354c9f; border: 4px solid #ffb083; border-radius: 22px; padding: 14px 16px; margin-top: 12px; box-shadow: 7px 7px 0 #ff2bbd; }
+    details p, details li { color: #354c9f; }
+    summary { cursor: pointer; font-weight: 950; color: #ff2bbd; text-transform: uppercase; }
+    .score-row { display: grid; grid-template-columns: 120px 1fr auto; gap: 10px; align-items: center; margin: 11px 0; }
+    .bar { height: 14px; border-radius: 999px; background: rgba(255, 243, 219, .28); overflow: hidden; border: 2px solid #fff3db; }
+    .bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent-2), #ffb083, var(--accent)); }
+    .big-number { font-size: 76px; font-weight: 950; letter-spacing: -.08em; color: var(--accent-2); text-shadow: 5px 5px 0 #ff2bbd; }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .column { background: #2e3f84; border: 4px solid #fff3db; border-radius: 30px; padding: 16px; min-height: 320px; box-shadow: 10px 10px 0 #ff2bbd; }
+    .task-card { background: #fff3db; color: #354c9f; border: 3px solid #ffb083; border-radius: 22px; padding: 14px; margin-top: 12px; box-shadow: 7px 7px 0 rgba(236, 255, 25, .7); }
+    .task-card strong { color: #354c9f; }
+    .launcher { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .launch-card {
+      border: 5px solid #fff3db; background: #ff2bbd; border-radius: 34px; padding: 26px; min-height: 165px;
+      display: flex; flex-direction: column; justify-content: space-between; color: white;
+      box-shadow: 12px 12px 0 var(--accent-2); cursor: pointer; text-align: left;
+    }
+    .launch-card:nth-child(even) { background: #fff3db; color: #354c9f; box-shadow: 12px 12px 0 #ff2bbd; }
+    .launch-card strong { font-size: 30px; letter-spacing: -.045em; text-transform: uppercase; line-height: .95; }
+    .launch-card .muted { color: inherit; opacity: .86; font-weight: 900; }
+    .timeline { position: relative; display: grid; gap: 14px; }
+    .time-block { display: grid; grid-template-columns: 100px 1fr; gap: 16px; align-items: start; }
+    .time-pill { background: var(--accent-2); color: #ff2bbd; padding: 12px 14px; border-radius: 999px; text-align: center; font-weight: 950; text-transform: uppercase; box-shadow: 0 7px 0 #ff2bbd; }
+    .room-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .room-tile { min-height: 210px; background: #fff3db; color: #354c9f; border: 5px solid #ffb083; border-radius: 36px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 13px 13px 0 #ff2bbd; }
+    .room-tile h2 { color: #ff2bbd; text-shadow: none; }
+    .room-tile li, .room-tile label { color: #354c9f; font-weight: 800; }
+    .ops-shell { display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 16px; }
+    .redflag { background: #ff2bbd; border-color: #fff3db; }
+    .procedure { counter-reset: step; display: grid; gap: 10px; }
+    .procedure li { list-style: none; position: relative; padding-left: 44px; min-height: 35px; }
+    .procedure li:before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: -2px; width: 32px; height: 32px; border-radius: 999px; background: var(--accent-2); color: #ff2bbd; display: grid; place-items: center; font-weight: 950; box-shadow: 0 4px 0 #ff2bbd; }
+    .matrix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .matrix .card { min-height: 240px; }
+    .compare-card { height: 570px; overflow: auto; background: #2e3f84; border: 4px solid #fff3db; border-radius: 30px; padding: 16px; }
+    .compare-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 10px; }
+    .open-btn { border: 3px solid white; border-radius: 999px; background: var(--accent-2); color: #ff2bbd; padding: 9px 14px; cursor: pointer; font-weight: 950; text-transform: uppercase; box-shadow: 0 6px 0 #ff2bbd; }
+    @media (max-width: 1050px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      .span-3, .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
+      .board, .ops-shell, .matrix { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      main { padding: 14px; }
+      aside { padding: 16px; }
+      .launcher, .room-grid { grid-template-columns: 1fr; }
+      .time-block { grid-template-columns: 1fr; }
+      .hero { border-radius: 24px; }
+      .card { border-radius: 20px; }
+    }
+    @media print {
+      aside, .topbar { display: none !important; }
+      .app { display: block; }
+      main { padding: 0; }
+      .hero, .card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand">
+      <div class="logo">🏡</div>
+      <div>
+        <h3>House Rules</h3>
+        <div class="small muted">Sip · Savor · Score</div>
+      </div>
+    </div>
+    <div id="nav" class="nav"></div>
+    <div class="utility">
+      <button id="mobileToggle">📱 Mobile frame</button>
+      <button id="printBtn">🖨️ Print</button>
+      <button id="downloadHtml">⬇️ HTML</button>
+      <button id="resetData">↺ Reset</button>
+    </div>
+    <div id="status" class="status">● Live data valid</div>
+    <p class="small"><strong>Edit once, compare everywhere.</strong> The JSON below feeds every dashboard proposal. It is saved in this browser only.</p>
+    <textarea id="dataEditor" spellcheck="false"></textarea>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div class="chips">
+        <span class="chip dark">House dashboard proposals</span>
+        <span class="chip">Bold arcade style</span>
+        <span class="chip">GitHub Pages-ready</span>
+      </div>
+    </div>
+    <div id="previewWrap" class="preview-wrap">
+      <div id="preview"></div>
+    </div>
+  </main>
+</div>
+
+<script id="seed" type="application/json">{
+  "houseName": "House Rules",
+  "subtitle": "Sip. Savor. Score. A bold little dashboard for keeping the house playful, clean, and under control.",
+  "greeting": "Hi love — this is not a rulebook, just the little things that keep the house feeling like home.",
+  "todayFocus": "Keep the kitchen calm, laundry moving, and the house fresh.",
+  "daily": [
+    "Open curtains and air the bedroom for 10 minutes.",
+    "Keep the kitchen counter clear before bed.",
+    "Check dishwasher: start it or empty it if needed.",
+    "Make sure laundry is not forgotten in the washing machine.",
+    "Lock the front door before sleeping."
+  ],
+  "everyFewDays": [
+    "Take out trash before it becomes a creature.",
+    "Swap damp bathroom towels.",
+    "Check plants only if soil feels dry.",
+    "Vacuum main walking areas if crumbs appear."
+  ],
+  "weekly": [
+    "Wash towels and bedding if needed.",
+    "Clean bathroom sink and mirror.",
+    "Check fridge for food that should be used soon.",
+    "Put things back in their normal spots."
+  ],
+  "consistencies": [
+    { "title": "Kitchen baseline", "detail": "Counter clear, sink not full, dishwasher handled before bed.", "score": 90 },
+    { "title": "Laundry rhythm", "detail": "Better one small load than a scary mountain later.", "score": 75 },
+    { "title": "Fresh air", "detail": "Short airing moments are enough; do not leave windows open all day.", "score": 70 },
+    { "title": "Calm house rule", "detail": "If something smells weird, looks wet, or beeps: investigate sooner.", "score": 95 }
+  ],
+  "rooms": [
+    { "name": "Kitchen", "emoji": "🍳", "status": "Needs nightly reset", "notes": ["Wipe the counter after cooking.", "Food scraps go in the right bin.", "Do not leave pans soaking forever."] },
+    { "name": "Bathroom", "emoji": "🛁", "status": "Watch towels", "notes": ["Hang towels open so they dry.", "Quickly rinse toothpaste marks.", "Replace toilet paper before it becomes a quest."] },
+    { "name": "Bedroom", "emoji": "🛏️", "status": "Air briefly", "notes": ["Air briefly in the morning.", "Keep laundry off the floor if possible.", "Close windows before leaving."] },
+    { "name": "Living room", "emoji": "🛋️", "status": "Cozy but not chaotic", "notes": ["Cups return to the kitchen.", "Blankets can be cozy, but not chaotic.", "Vacuum if crumbs happen."] }
+  ],
+  "laundry": [
+    { "load": "Normal clothes", "temp": "30–40°C", "detergent": "Normal detergent", "avoid": "Avoid mixing bright colors with whites." },
+    { "load": "Towels", "temp": "60°C", "detergent": "Normal detergent", "avoid": "Do not overload; towels need space." },
+    { "load": "Delicates / nice shirts", "temp": "30°C gentle", "detergent": "Small amount", "avoid": "Do not tumble dry unless label says yes." },
+    { "load": "Bedding", "temp": "40–60°C", "detergent": "Normal detergent", "avoid": "Dry fully before putting away." }
+  ],
+  "recipes": [
+    { "name": "Pasta pesto comfort bowl", "time": "15 min", "ingredients": ["Pasta", "Pesto", "Tomatoes", "Cheese"], "steps": ["Boil pasta.", "Save a spoon of pasta water.", "Mix pesto and pasta water.", "Add tomatoes and cheese."], "note": "Impossible to ruin, almost." },
+    { "name": "Rice bowl", "time": "20 min", "ingredients": ["Rice", "Egg or tofu", "Vegetables", "Soy sauce"], "steps": ["Cook rice.", "Fry vegetables.", "Add protein.", "Finish with sauce."], "note": "Good fridge-cleaning meal." },
+    { "name": "Oven wraps", "time": "18 min", "ingredients": ["Wraps", "Cheese", "Beans/chicken", "Vegetables"], "steps": ["Fill wraps.", "Fold and place in oven dish.", "Bake until warm and crispy."], "note": "Very good lazy dinner." }
+  ],
+  "troubleshooting": [
+    { "problem": "Laundry smells damp", "fix": "Rewash it. Do not let it dry halfway in a pile." },
+    { "problem": "Kitchen smells weird", "fix": "Check trash, sink, dishwasher filter area, and old food." },
+    { "problem": "Plant looks sad", "fix": "Check soil first. Dry soil: small water. Wet soil: leave it alone." },
+    { "problem": "You feel overwhelmed", "fix": "Do only kitchen counter, trash, and laundry-machine check. That already helps." }
+  ],
+  "sweetNotes": [
+    "You do not need to do everything perfectly.",
+    "Future me will be very happy if the laundry machine is empty.",
+    "Coffee is allowed. Chaos is negotiable. Mold is not.",
+    "Thank you for taking care of our home ❤️"
+  ]
+}</script>
+
+<script>
+const VIEWS = [
+  ["command", "1. Command Center"],
+  ["kanban", "2. Routine Kanban"],
+  ["launcher", "3. Quick Action Hub"],
+  ["timeline", "4. Dayflow Dashboard"],
+  ["rooms", "5. Room Map"],
+  ["ops", "6. Ops Board"],
+  ["compare", "Compare all"]
+];
+
+let data = loadData();
+let currentView = location.hash ? location.hash.replace("#", "") : "command";
+if (!VIEWS.some(v => v[0] === currentView)) currentView = "command";
+
+const preview = document.getElementById("preview");
+const nav = document.getElementById("nav");
+const editor = document.getElementById("dataEditor");
+const statusEl = document.getElementById("status");
+const previewWrap = document.getElementById("previewWrap");
+const seed = document.getElementById("seed");
+
+function esc(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+function list(items) { return `<ul class="clean">${(items || []).map(i => `<li>${esc(i)}</li>`).join("")}</ul>`; }
+function checklist(items, prefix) {
+  return `<div class="check">${(items || []).map((item, index) => `<label><input type="checkbox" data-check="${prefix}-${index}"><span>${esc(item)}</span></label>`).join("")}</div>`;
+}
+function hero(label, reason) {
+  return `<section class="hero">
+    <span class="tag blue">${esc(label)}</span>
+    <h1>${esc(data.houseName)}</h1>
+    <p>${esc(data.subtitle)}</p>
+    <p><strong>${esc(data.greeting)}</strong></p>
+    <p class="small"><strong>Why this layout works:</strong> ${esc(reason)}</p>
+  </section>`;
+}
+function recipeCard(recipe) {
+  return `<article class="plain-card">
+    <h4>🍽️ ${esc(recipe.name)}</h4>
+    <span class="tag">${esc(recipe.time)}</span>
+    <p class="small"><strong>Ingredients:</strong> ${(recipe.ingredients || []).map(esc).join(", ")}</p>
+    <details><summary>Steps</summary>${list(recipe.steps)}<p>${esc(recipe.note)}</p></details>
+  </article>`;
+}
+function laundryDetails() {
+  return (data.laundry || []).map(item => `<details><summary>${esc(item.load)} — ${esc(item.temp)}</summary><p><strong>Detergent:</strong> ${esc(item.detergent)}</p><p><strong>Avoid:</strong> ${esc(item.avoid)}</p></details>`).join("");
+}
+function progressRows() {
+  return (data.consistencies || []).map(item => `<div class="score-row"><strong>${esc(item.title)}</strong><div class="bar"><span style="width:${Math.max(0, Math.min(100, Number(item.score || 70)))}%"></span></div><span class="small">${esc(item.score || 70)}%</span></div>`).join("");
+}
+
+function renderCommand() {
+  return hero("At-a-glance command center", "Puts the most important state and next actions above the fold, similar to operational dashboards.") + `
+  <section class="grid">
+    <article class="card span-4"><h3>Today’s house score</h3><div class="big-number">82</div><p>${esc(data.todayFocus)}</p><span class="tag ok">Stable</span><span class="tag warn">Laundry check</span></article>
+    <article class="card span-8"><h2>Do these first</h2>${checklist((data.daily || []).slice(0, 5), "command-first")}</article>
+    <article class="card span-5"><h2>Consistency levels</h2>${progressRows()}</article>
+    <article class="card span-4"><h2>Laundry quick guide</h2>${laundryDetails()}</article>
+    <article class="card span-3"><h2>Red flags</h2>${list((data.troubleshooting || []).map(t => t.problem))}</article>
+    <article class="card span-12"><h2>Easy food cards</h2><div class="grid">${(data.recipes || []).map(r => `<div class="span-4">${recipeCard(r)}</div>`).join("")}</div></article>
+  </section>`;
+}
+
+function renderKanban() {
+  const now = (data.daily || []).slice(0, 3);
+  const next = (data.daily || []).slice(3).concat((data.everyFewDays || []).slice(0, 2));
+  const later = (data.weekly || []).concat((data.everyFewDays || []).slice(2));
+  const card = text => `<div class="task-card"><label><input type="checkbox"><strong>${esc(text)}</strong></label></div>`;
+  return hero("Routine Kanban board", "Turns house care into visible workflow states: now, next, and later. This is useful when tasks compete for attention.") + `
+  <section class="card">
+    <div class="board">
+      <div class="column"><span class="tag warn">Now</span><h3>Reset the house</h3>${now.map(card).join("")}</div>
+      <div class="column"><span class="tag blue">Next</span><h3>Keep it moving</h3>${next.map(card).join("")}</div>
+      <div class="column"><span class="tag ok">Later</span><h3>Weekly / optional</h3>${later.map(card).join("")}</div>
+    </div>
+  </section>
+  <section class="grid" style="margin-top:16px">
+    <article class="card span-6"><h2>Laundry lane</h2>${laundryDetails()}</article>
+    <article class="card span-6"><h2>Food lane</h2>${(data.recipes || []).map(recipeCard).join("")}</article>
+  </section>`;
+}
+
+function renderLauncher() {
+  return hero("Quick action hub", "Uses large task-based entry points so he chooses by intent: laundry, food, cleaning, problem, or minimum viable reset.") + `
+  <section class="launcher">
+    <button class="launch-card" onclick="document.getElementById('laundry-zone')?.scrollIntoView({behavior:'smooth'})"><strong>🧺 I need to do laundry</strong><span class="muted">Pick the load and avoid disasters.</span></button>
+    <button class="launch-card" onclick="document.getElementById('food-zone')?.scrollIntoView({behavior:'smooth'})"><strong>🍝 I need food</strong><span class="muted">Fast recipes with low chaos.</span></button>
+    <button class="launch-card" onclick="document.getElementById('clean-zone')?.scrollIntoView({behavior:'smooth'})"><strong>🧽 I should clean</strong><span class="muted">Only the most important reset points.</span></button>
+    <button class="launch-card" onclick="document.getElementById('help-zone')?.scrollIntoView({behavior:'smooth'})"><strong>🆘 Something is weird</strong><span class="muted">Smells, wet things, sad plants, overwhelm.</span></button>
+  </section>
+  <section class="grid" style="margin-top:16px">
+    <article id="clean-zone" class="card span-6"><h2>Minimum viable clean</h2>${checklist(["Kitchen counter clear", "Laundry machine empty", "Trash checked", "Door locked"], "launcher-clean")}</article>
+    <article id="laundry-zone" class="card span-6"><h2>Laundry decision cards</h2>${laundryDetails()}</article>
+    <article id="food-zone" class="card span-6"><h2>Fast food options</h2>${(data.recipes || []).map(recipeCard).join("")}</article>
+    <article id="help-zone" class="card span-6"><h2>Troubleshooting</h2>${(data.troubleshooting || []).map(t => `<details open><summary>${esc(t.problem)}</summary><p>${esc(t.fix)}</p></details>`).join("")}</article>
+  </section>`;
+}
+
+function renderTimeline() {
+  return hero("Dayflow dashboard", "Organizes the same responsibilities chronologically, reducing the question: when should I do what?") + `
+  <section class="card">
+    <div class="timeline">
+      <div class="time-block"><div class="time-pill">Morning</div><div class="plain-card"><h3>Fresh start</h3>${checklist((data.daily || []).slice(0, 2), "time-morning")}</div></div>
+      <div class="time-block"><div class="time-pill">Anytime</div><div class="plain-card"><h3>Maintenance</h3>${checklist((data.everyFewDays || []).slice(0, 3), "time-anytime")}</div></div>
+      <div class="time-block"><div class="time-pill">Dinner</div><div class="plain-card"><h3>Food and kitchen</h3><div class="grid">${(data.recipes || []).map(r => `<div class="span-4">${recipeCard(r)}</div>`).join("")}</div></div></div>
+      <div class="time-block"><div class="time-pill">Evening</div><div class="plain-card"><h3>Close-down routine</h3>${checklist((data.daily || []).slice(2), "time-evening")}</div></div>
+    </div>
+  </section>
+  <section class="grid" style="margin-top:16px"><article class="card span-6"><h2>Laundry timing</h2>${laundryDetails()}</article><article class="card span-6"><h2>Weekly background tasks</h2>${list(data.weekly)}</article></section>`;
+}
+
+function renderRooms() {
+  return hero("Room map dashboard", "Makes the house itself the navigation. Useful when tasks are spatial: kitchen, bathroom, bedroom, living room.") + `
+  <section class="room-grid">
+    ${(data.rooms || []).map((room, index) => `<article class="room-tile"><div><h2>${esc(room.emoji)} ${esc(room.name)}</h2><span class="tag blue">${esc(room.status)}</span></div>${list(room.notes)}<label><input type="checkbox" data-check="room-${index}"> Room checked</label></article>`).join("")}
+  </section>
+  <section class="grid" style="margin-top:16px">
+    <article class="card span-4"><h2>Kitchen-adjacent food</h2>${(data.recipes || []).slice(0, 2).map(recipeCard).join("")}</article>
+    <article class="card span-4"><h2>Bathroom/laundry</h2>${laundryDetails()}</article>
+    <article class="card span-4"><h2>Whole-house rules</h2>${list((data.consistencies || []).map(c => `${c.title}: ${c.detail}`))}</article>
+  </section>`;
+}
+
+function renderOps() {
+  return hero("House ops board", "A more serious standard-operating-procedure layout: status, red flags, exact procedures, and fallback actions.") + `
+  <section class="ops-shell">
+    <aside class="card redflag"><h2>Red flags</h2><p>These are the things to investigate quickly.</p>${(data.troubleshooting || []).map(t => `<details open><summary>${esc(t.problem)}</summary><p>${esc(t.fix)}</p></details>`).join("")}</aside>
+    <div class="grid">
+      <article class="card span-6"><h2>Daily SOP</h2><ol class="procedure">${(data.daily || []).map(x => `<li>${esc(x)}</li>`).join("")}</ol></article>
+      <article class="card span-6"><h2>Laundry SOP</h2>${laundryDetails()}</article>
+      <article class="card span-12"><h2>Decision matrix</h2><div class="matrix"><article class="card"><h3>Do now</h3>${list(["Wet laundry", "Weird smell", "Unlocked door", "Overflowing trash"])}</article><article class="card"><h3>Can wait</h3>${list(["Vacuum if not dirty", "Deep cleaning", "Fancy cooking", "Perfect organization"])}</article></div></article>
+    </div>
+  </section>`;
+}
+
+function renderCompare() {
+  const views = [
+    ["Command Center", renderCommand, "At-a-glance overview"],
+    ["Routine Kanban", renderKanban, "Workflow board"],
+    ["Quick Action Hub", renderLauncher, "Intent-based buttons"],
+    ["Dayflow", renderTimeline, "Chronological routine"],
+    ["Room Map", renderRooms, "Spatial navigation"],
+    ["Ops Board", renderOps, "Procedure and red-flag focus"]
+  ];
+  return hero("Side-by-side comparison", "Every proposal uses the same underlying content, so you can compare information architecture, not just styling.") + `<section class="grid">${views.map((view, index) => `<article class="card span-6"><div class="compare-head"><div><h3>${index + 1}. ${esc(view[0])}</h3><p class="small">${esc(view[2])}</p></div><button class="open-btn" onclick="setView('${VIEWS[index][0]}')">Open</button></div><div class="compare-card">${view[1]()}</div></article>`).join("")}</section>`;
+}
+
+function render() {
+  nav.innerHTML = VIEWS.map(view => `<button class="${view[0] === currentView ? "active" : ""}" onclick="setView('${view[0]}')">${view[1]}</button>`).join("");
+  const fn = { command: renderCommand, kanban: renderKanban, launcher: renderLauncher, timeline: renderTimeline, rooms: renderRooms, ops: renderOps, compare: renderCompare }[currentView];
+  preview.innerHTML = fn();
+  restoreChecks();
+}
+function setView(id) { currentView = id; location.hash = id; render(); }
+window.setView = setView;
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem("houseDashboardProposalData");
+    if (saved) return JSON.parse(saved);
+    return JSON.parse(document.getElementById("seed").textContent);
+  } catch (error) {
+    return JSON.parse(document.getElementById("seed").textContent);
+  }
+}
+function saveData() {
+  localStorage.setItem("houseDashboardProposalData", JSON.stringify(data));
+  seed.textContent = JSON.stringify(data, null, 2);
+}
+function syncEditor() { editor.value = JSON.stringify(data, null, 2); seed.textContent = editor.value; }
+function setStatus(ok, msg) { statusEl.className = ok ? "status" : "status bad"; statusEl.textContent = `● ${msg}`; }
+let editTimer;
+editor.addEventListener("input", () => {
+  clearTimeout(editTimer);
+  editTimer = setTimeout(() => {
+    try {
+      data = JSON.parse(editor.value);
+      saveData();
+      setStatus(true, "Live data valid");
+      render();
+    } catch (error) {
+      setStatus(false, "JSON needs fixing");
+    }
+  }, 250);
+});
+
+document.getElementById("resetData").addEventListener("click", () => {
+  if (!confirm("Reset the sample data?")) return;
+  localStorage.removeItem("houseDashboardProposalData");
+  data = JSON.parse(seed.textContent);
+  syncEditor();
+  render();
+  setStatus(true, "Reset complete");
+});
+document.getElementById("mobileToggle").addEventListener("click", () => previewWrap.classList.toggle("mobile"));
+document.getElementById("printBtn").addEventListener("click", () => window.print());
+document.getElementById("downloadHtml").addEventListener("click", () => {
+  seed.textContent = JSON.stringify(data, null, 2);
+  const blob = new Blob(["<!doctype html>" + document.documentElement.outerHTML], { type: "text/html" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "index.html";
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
+document.addEventListener("change", event => {
+  if (event.target.matches("input[type=checkbox][data-check]")) localStorage.setItem("check-" + event.target.dataset.check, event.target.checked ? "1" : "0");
+});
+function restoreChecks() {
+  document.querySelectorAll("input[type=checkbox][data-check]").forEach(input => { input.checked = localStorage.getItem("check-" + input.dataset.check) === "1"; });
+}
+window.addEventListener("hashchange", () => {
+  const next = location.hash.replace("#", "");
+  if (VIEWS.some(v => v[0] === next)) { currentView = next; render(); }
+});
+syncEditor();
+render();
+</script>
+</body>
+</html>
