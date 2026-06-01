@@ -6,8 +6,30 @@ This version is built so the dashboard is made from reusable **interface frames*
 
 - `index.html` — the page shell.
 - `assets/styles.css` — the visual style.
-- `assets/config.js` — all content and the list/order of frames.
+- `assets/config.js` — all content, categories, and the list/order of frames.
 - `assets/app.js` — the renderer that turns frames into cards.
+
+## New: categories
+
+Each frame can now have a `category` property. This appears as a small badge on the card and in the browser layout editor.
+
+```js
+{ id: "quick-actions", category: "Actions", type: "quickActions", title: "Quick actions", width: "span-12", enabled: true }
+```
+
+Categories do not restrict layout. They are labels to help you keep track of replicated cards, for example `Food`, `Actions`, `Instructions`, `Routine`, or `Love`.
+
+## Quick action cards
+
+The dashboard now supports a `quickActions` frame type. The quick-action cards are controlled by `content.quickActions`:
+
+```js
+quickActions: [
+  { title: "I need to do laundry", emoji: "🧺", description: "Pick the load and avoid disasters.", targetFrameId: "laundry" }
+]
+```
+
+The `targetFrameId` scrolls to the frame with that id.
 
 ## How to reorder cards
 
@@ -61,6 +83,7 @@ On mobile, all cards automatically become full-width.
 - `laundry`
 - `redFlags`
 - `recipes`
+- `quickActions`
 - `rooms`
 - `dayflow`
 - `kanban`

@@ -7,6 +7,8 @@
   To remove cards: delete a layout object or set enabled: false.
   To replicate cards: copy a layout object and give it a new id.
   To change card width: use span-3, span-4, span-5, span-6, span-7, span-8, or span-12.
+  To group frames: set category, for example category: "Food" or category: "Actions".
+  To add quick action cards: use type: "quickActions" and edit content.quickActions.
   To add a custom frame: use type: "customHtml" and put your HTML in html.
 */
 window.HOUSE_CONFIG = {
@@ -19,18 +21,19 @@ window.HOUSE_CONFIG = {
   },
 
   layout: [
-    { id: "countdown-main", type: "countdown", title: "Countdown", width: "span-4", enabled: true, targetDate: "2026-06-30" },
-    { id: "daily-first", type: "checklist", title: "Do these first", width: "span-8", enabled: true, source: "daily", limit: 5 },
-    { id: "consistency", type: "consistency", title: "Consistency levels", width: "span-5", enabled: true },
-    { id: "laundry", type: "laundry", title: "Laundry guide", width: "span-4", enabled: true },
-    { id: "red-flags", type: "redFlags", title: "Red flags", width: "span-3", enabled: true },
-    { id: "recipes", type: "recipes", title: "Easy food cards", width: "span-12", enabled: true },
+    { id: "countdown-main", category: "Love", type: "countdown", title: "Countdown", width: "span-4", enabled: true, targetDate: "2026-06-30" },
+    { id: "daily-first", category: "Today", type: "checklist", title: "Do these first", width: "span-8", enabled: true, source: "daily", limit: 5 },
+    { id: "consistency", category: "House rhythm", type: "consistency", title: "Consistency levels", width: "span-5", enabled: true },
+    { id: "laundry", category: "Instructions", type: "laundry", title: "Laundry guide", width: "span-4", enabled: true },
+    { id: "red-flags", category: "Help", type: "redFlags", title: "Red flags", width: "span-3", enabled: true },
+    { id: "recipes", category: "Food", type: "recipes", title: "Easy food cards", width: "span-12", enabled: true },
+    { id: "quick-actions", category: "Actions", type: "quickActions", title: "Quick actions", width: "span-12", enabled: true },
 
     /* Extra frames are included but disabled, so you can enable/copy them later. */
-    { id: "rooms", type: "rooms", title: "Room map", width: "span-12", enabled: false },
-    { id: "dayflow", type: "dayflow", title: "Dayflow", width: "span-12", enabled: false },
-    { id: "kanban", type: "kanban", title: "Routine Kanban", width: "span-12", enabled: false },
-    { id: "sweet-notes", type: "notes", title: "Little notes", width: "span-6", enabled: false }
+    { id: "rooms", category: "Rooms", type: "rooms", title: "Room map", width: "span-12", enabled: false },
+    { id: "dayflow", category: "Routine", type: "dayflow", title: "Dayflow", width: "span-12", enabled: false },
+    { id: "kanban", category: "Routine", type: "kanban", title: "Routine Kanban", width: "span-12", enabled: false },
+    { id: "sweet-notes", category: "Love", type: "notes", title: "Little notes", width: "span-6", enabled: false }
   ],
 
   content: {
@@ -74,6 +77,12 @@ window.HOUSE_CONFIG = {
       { name: "Pasta pesto comfort bowl", time: "15 min", ingredients: ["Pasta", "Pesto", "Tomatoes", "Cheese"], steps: ["Boil pasta.", "Save a spoon of pasta water.", "Mix pesto and pasta water.", "Add tomatoes and cheese."], note: "Impossible to ruin, almost." },
       { name: "Rice bowl", time: "20 min", ingredients: ["Rice", "Egg or tofu", "Vegetables", "Soy sauce"], steps: ["Cook rice.", "Fry vegetables.", "Add protein.", "Finish with sauce."], note: "Good fridge-cleaning meal." },
       { name: "Oven wraps", time: "18 min", ingredients: ["Wraps", "Cheese", "Beans/chicken", "Vegetables"], steps: ["Fill wraps.", "Fold and place in oven dish.", "Bake until warm and crispy."], note: "Very good lazy dinner." }
+    ],
+    quickActions: [
+      { title: "I need to do laundry", emoji: "🧺", description: "Pick the load and avoid disasters.", targetFrameId: "laundry" },
+      { title: "I need food", emoji: "🍝", description: "Fast recipes with low chaos.", targetFrameId: "recipes" },
+      { title: "I should clean", emoji: "🧽", description: "Only the most important reset points.", targetFrameId: "daily-first" },
+      { title: "Something is weird", emoji: "🆘", description: "Smells, wet things, sad plants, overwhelm.", targetFrameId: "red-flags" }
     ],
 
     troubleshooting: [

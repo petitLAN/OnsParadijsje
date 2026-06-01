@@ -1,5 +1,5 @@
 (() => {
-  const STORAGE_KEY = "ons-paradijsje-modular-layout-v1";
+  const STORAGE_KEY = "ons-paradijsje-modular-layout-v2";
   const config = structuredClone(window.HOUSE_CONFIG);
   let layout = loadLayout();
   const dashboard = document.getElementById("dashboard");
@@ -14,6 +14,7 @@
     laundry: "Laundry guide",
     redFlags: "Red flags",
     recipes: "Recipes",
+    quickActions: "Quick actions",
     rooms: "Room map",
     dayflow: "Dayflow",
     kanban: "Kanban",
@@ -61,11 +62,13 @@
   function renderShell(frame, body, typeLabel) {
     const article = document.createElement("article");
     article.className = `card frame-card ${frame.width || "span-4"} ${frame.type === "countdown" ? "countdown-card" : ""}`;
+    article.id = slug(frame.id);
     article.dataset.frameId = frame.id;
+    const categoryTag = frame.category ? `<span class="tag category-tag">${esc(frame.category)}</span>` : "";
     article.innerHTML = `
       <div class="frame-card-head">
         <div>
-          <span class="tag blue">${esc(typeLabel || FRAME_TYPES[frame.type] || frame.type)}</span>
+          <div class="frame-tags"><span class="tag blue">${esc(typeLabel || FRAME_TYPES[frame.type] || frame.type)}</span>${categoryTag}</div>
           <h2>${esc(frame.title || FRAME_TYPES[frame.type] || "Frame")}</h2>
         </div>
         <span class="frame-handle" title="Frame module">▦</span>
@@ -132,6 +135,20 @@
     return renderShell(frame, html, "recipe frame");
   }
 
+
+
+  function renderQuickActions(frame) {
+    const actions = config.content.quickActions || [];
+    const html = `<div class="launcher">${actions.map((action, index) => {
+      const target = action.targetFrameId ? `#${slug(action.targetFrameId)}` : "#";
+      return `<a class="launch-card" href="${esc(target)}" data-action-index="${index}">
+        <strong>${esc(action.emoji || "✨")} ${esc(action.title)}</strong>
+        <span>${esc(action.description)}</span>
+      </a>`;
+    }).join("")}</div>`;
+    return renderShell(frame, html, "action frame");
+  }
+
   function renderRooms(frame) {
     const html = `<div class="room-grid">${(config.content.rooms || []).map((room, index) => `
       <article class="room-tile">
@@ -179,6 +196,7 @@
     laundry: renderLaundry,
     redFlags: renderRedFlags,
     recipes: renderRecipes,
+    quickActions: renderQuickActions,
     rooms: renderRooms,
     dayflow: renderDayflow,
     kanban: renderKanban,
@@ -205,7 +223,7 @@
       row.innerHTML = `
         <div>
           <h4>${esc(frame.title || frame.type)}</h4>
-          <p class="small">${esc(frame.id)} · ${esc(FRAME_TYPES[frame.type] || frame.type)} · ${esc(frame.width || "span-4")} · ${frame.enabled === false ? "hidden" : "visible"}</p>
+          <p class="small">${esc(frame.id)} · ${esc(frame.category || "Uncategorized")} · ${esc(FRAME_TYPES[frame.type] || frame.type)} · ${esc(frame.width || "span-4")} · ${frame.enabled === false ? "hidden" : "visible"}</p>
         </div>
         <div class="frame-actions">
           <button type="button" data-action="up" data-index="${index}">↑</button>
@@ -239,9 +257,37 @@
     renderDashboard();
   }
 
+  function defaultCategory(type) {
+    return ({
+      countdown: "Love",
+      checklist: "Today",
+      consistency: "House rhythm",
+      laundry: "Instructions",
+      redFlags: "Help",
+      recipes: "Food",
+      quickActions: "Actions",
+      rooms: "Rooms",
+      dayflow: "Routine",
+      kanban: "Routine",
+      notes: "Love",
+      customHtml: "Custom"
+    })[type] || "General";
+  }
+
+  function defaultWidth(type) {
+    return ({
+      customHtml: "span-6",
+      recipes: "span-12",
+      quickActions: "span-12",
+      rooms: "span-12",
+      dayflow: "span-12",
+      kanban: "span-12"
+    })[type] || "span-4";
+  }
+
   function addFrame(type) {
     const id = `${slug(type)}-${Date.now().toString(36)}`;
-    const frame = { id, type, title: FRAME_TYPES[type] || "New frame", width: type === "customHtml" ? "span-6" : "span-4", enabled: true };
+    const frame = { id, type, category: defaultCategory(type), title: FRAME_TYPES[type] || "New frame", width: defaultWidth(type), enabled: true };
     if (type === "checklist") frame.source = "daily";
     if (type === "countdown") frame.targetDate = config.meta.countdownTarget;
     if (type === "customHtml") frame.html = "<p>A custom frame. Edit this in the exported config.</p>";
