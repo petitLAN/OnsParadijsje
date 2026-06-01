@@ -30,13 +30,15 @@
   function loadLayout() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : structuredClone(config.layout);
+      const rawLayout = saved ? JSON.parse(saved) : structuredClone(config.layout);
+      return normalizeLayout(rawLayout);
     } catch {
-      return structuredClone(config.layout);
+      return normalizeLayout(structuredClone(config.layout));
     }
   }
 
   function saveLayout() {
+    layout = normalizeLayout(layout);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
   }
 
@@ -50,7 +52,43 @@
   }
 
   function slug(value) {
-    return String(value || "frame").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "frame";
+    return String(value || "frame")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "") || "frame";
+  }
+
+  function normalizeLayout(rawLayout) {
+    const seen = new Map();
+    return (Array.isArray(rawLayout) ? rawLayout : []).map((rawFrame, index) => {
+      const frame = (rawFrame && typeof rawFrame === "object") ? structuredClone(rawFrame) : {};
+      frame.type = frame.type || "customHtml";
+      frame.title = frame.title || FRAME_TYPES[frame.type] || `Frame ${index + 1}`;
+      frame.width = frame.width || defaultWidth(frame.type);
+
+      const baseId = slug(frame.id || `${frame.type}-${index + 1}`);
+      const count = seen.get(baseId) || 0;
+      seen.set(baseId, count + 1);
+      frame.id = count === 0 ? baseId : `${baseId}-${count + 1}`;
+
+      return frame;
+    });
+  }
+
+  function sanitizeForExport(value) {
+    if (Array.isArray(value)) {
+      return Array.from(value)
+        .filter(item => item !== undefined && item !== null)
+        .map(sanitizeForExport);
+    }
+    if (value && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value)
+          .filter(([, item]) => item !== undefined)
+          .map(([key, item]) => [key, sanitizeForExport(item)])
+      );
+    }
+    return value;
   }
 
   function list(items) {
@@ -133,8 +171,8 @@
     const html = (config.content.laundry || []).map(item => `
       <details>
         <summary>${esc(item.load)} — ${esc(item.temp)}</summary>
-        <p><strong>Was spul:</strong> ${esc(item.detergent)}</p>
-        <p><strong>Let Op:</strong> ${esc(item.avoid)}</p>
+        <p><strong>Detergent:</strong> ${esc(item.detergent)}</p>
+        <p><strong>Avoid:</strong> ${esc(item.avoid)}</p>
       </details>
     `).join("");
     return renderShell(frame, html, "instruction frame");
@@ -160,8 +198,6 @@
     return renderShell(frame, html, "recipe frame");
   }
 
-
-
   function renderQuickActions(frame) {
     const source = frame.source || "quickActions";
     const actions = config.content[source] || [];
@@ -181,21 +217,95 @@
     return renderShell(frame, html, "procedure frame");
   }
 
-  function renderDecisionMatrix(frame) {
-    const matrix = config.content.decisionMatrix || {};
-    const columns = Array.isArray(matrix) ? matrix : [
-      { title: "Do now", tag: "urgent", items: matrix.doNow || [] },
-      { title: "Can wait", tag: "optional", items: matrix.canWait || [] }
-    ];
-    const html = `<div class="matrix">${columns.map(column => `
-      <article class="matrix-card">
-        <span class="tag ${String(column.tag || "").toLowerCase().includes("urgent") ? "warn" : "ok"}">${esc(column.tag || column.title)}</span>
-        <h3>${esc(column.title)}</h3>
-        ${list(column.items || [])}
-      </article>`).join("")}
-    </div>`;
-    return renderShell(frame, html, "decision frame");
+  /* ── Decision matrix helpers (no legacy fixed‑column logic) ── */
+
+  /**
+   * Normalise any decision‑matrix definition into a simple array of category objects.
+   * Supports inline frame.categories, content.decisionMatrices[key], and older
+   * content[key] structures that are already an array.
+   */
+  function normalizeDecisionCategories(matrix) {
+    let raw = [];
+    if (Array.isArray(matrix)) raw = matrix;
+    else if (Array.isArray(matrix?.categories)) raw = matrix.categories;
+    else if (Array.isArray(matrix?.columns)) raw = matrix.columns;
+
+    return Array.from(raw)
+      .filter(column => column && typeof column === "object")
+      .map(column => {
+        const items = column.items || column.tasks || column.points || [];
+        return {
+          ...column,
+          items: Array.isArray(items) ? items.filter(item => item !== undefined && item !== null) : []
+        };
+      });
   }
+
+  /**
+   * Choose a visual tag class for a category.
+   * Accepted values: "warn", "ok", "blue", "" (default).
+   * If the configured value is not in the set, fall back to a safe repeating pattern.
+   */
+  function decisionLabelClass(column = {}, index = 0) {
+    const allowed = new Set(["", "ok", "warn", "blue"]);
+    const configured = String(column.labelClass || column.tagClass || column.tone || "").trim();
+    if (allowed.has(configured)) return configured;
+    // Purely visual fallback; no meaning is inferred.
+    return ["warn", "blue", "ok", ""][index % 4];
+  }
+
+  function renderDecisionMatrix(frame) {
+    // 1. Try inline categories (highest priority)
+    if (Array.isArray(frame.categories)) {
+      const columns = normalizeDecisionCategories(frame.categories);
+      const html = buildMatrixHtml(columns);
+      return renderShell(frame, html, "decision frame");
+    }
+
+    // 2. Try the source key inside content.decisionMatrices
+    const matrices = config.content?.decisionMatrices || {};
+    const source = frame.source;
+    if (source && matrices[source]) {
+      const columns = normalizeDecisionCategories(matrices[source]);
+      const html = buildMatrixHtml(columns);
+      return renderShell(frame, html, "decision frame");
+    }
+
+    // 3. Fall back to config.content[source] (if it’s an array of categories)
+    if (source && Array.isArray(config.content?.[source])) {
+      const columns = normalizeDecisionCategories(config.content[source]);
+      const html = buildMatrixHtml(columns);
+      return renderShell(frame, html, "decision frame");
+    }
+
+    // 4. Last resort: show a placeholder message
+    const fallback = `<p>No decision categories defined. Add them via frame.categories or a source key in content.decisionMatrices.</p>`;
+    return renderShell(frame, fallback, "decision frame");
+  }
+
+  /** Build the HTML for an already-normalised array of category objects. */
+  function buildMatrixHtml(columns) {
+    if (!columns.length) {
+      return `<p>No decision categories defined. Add category objects to this matrix in <code>assets/config.js</code>.</p>`;
+    }
+
+    return `<div class="matrix">${columns.map((column, index) => {
+      const labelClass = decisionLabelClass(column, index);
+      const labelText = column.label || column.tag || column.badge || column.title || "Item";
+      const titleText = column.title || column.heading || labelText;
+      const note = column.note ? `<p class="small decision-matrix-note-card">${esc(column.note)}</p>` : "";
+      return `
+      <article class="matrix-card">
+        <span class="tag ${esc(labelClass)}">${esc(labelText)}</span>
+        <h3>${esc(titleText)}</h3>
+        ${note}
+        ${list(column.items)}
+      </article>`;
+    }).join("")}
+    </div>`;
+  }
+
+  /* ── End decision matrix helpers ── */
 
   function renderRooms(frame) {
     const html = `<div class="room-grid">${(config.content.rooms || []).map((room, index) => `
@@ -256,6 +366,7 @@
   };
 
   function renderDashboard() {
+    layout = normalizeLayout(layout);
     dashboard.innerHTML = "";
     layout.filter(frame => frame.enabled !== false).forEach(frame => {
       const renderer = renderers[frame.type] || renderCustomHtml;
@@ -348,7 +459,10 @@
     if (type === "countdown") {
       const firstCountdownKey = Object.keys(config.content?.countdowns || {})[0];
       frame.source = firstCountdownKey || "";
-      frame.targetDate = firstCountdownKey ? config.content.countdowns[firstCountdownKey].targetDate : config.meta.countdownTarget;
+    }
+    if (type === "decisionMatrix") {
+      const firstDecisionMatrixKey = Object.keys(config.content?.decisionMatrices || {})[0];
+      frame.source = firstDecisionMatrixKey || "";
     }
     if (type === "customHtml") frame.html = ui.editor?.customFramePlaceholder || "<p>A custom frame. Edit this in the exported config.</p>";
     layout.push(frame);
@@ -473,7 +587,7 @@
     document.getElementById("resetLayout").addEventListener("click", () => {
       if (!confirm(ui.editor?.resetConfirm || "Reset the layout to the default config order?")) return;
       localStorage.removeItem(STORAGE_KEY);
-      layout = structuredClone(config.layout);
+      layout = normalizeLayout(structuredClone(config.layout));
       renderDashboard();
     });
 

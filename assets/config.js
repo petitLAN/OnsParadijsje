@@ -4,9 +4,9 @@ window.HOUSE_CONFIG = {
     "documentTitle": "Ons Paradijsje — Modular Dashboard",
     "title": "Ons Paradijsje",
     "subtitle": "Eat. Sleep. Janken. Repeat. Althans, totdat ik weer terugkom om jouw huisvrouwtje te zijn.",
-    "greeting": "Hallow Poetsjiepoeh c==3, dit zijn niet per se de huisregels, gewoon een uitgebreide todo lijst... wat ik zoal doe als jij druk geld verdient. Of soms ook niet doe...",
+    "greeting": "Hallow Poetsjiepoeh c3 dit zijn niet per se de huisregels, gewoon een uitgebreide todo lijst wat ik zoal doe als jij druk geld verdient. Of soms ook niet doe...",
     "helper": "",
-    "heroLabel": "Dashboard for Ushj",
+    "heroLabel": "Modular house dashboard",
     "countdownTarget": "2026-06-30"
   },
   "ui": {
@@ -44,14 +44,14 @@ window.HOUSE_CONFIG = {
       "dateTag": "30 June",
       "almostTag": "Almost there",
       "manyDaysText": "dagen tot Ü 'N ME ❤️.",
-      // "targetPrefix": "Target:",
+      "targetPrefix": "Target:",
       "daysLeftTag": "Days left",
-      "oneDayText": "dagen tot Ü 'N ME ❤️.",
-      "tomorrowText": "Mogge ❤️",
+      "oneDayText": "dag tot Ü 'N ME ❤️.",
+      "tomorrowText": "Tomorrow ❤️",
       "almostShortTag": "Almost",
-      "todayText": "dagen...! Vandaag Ü 'N ME!! ❤️",
-      "todayTag": "Vandaag",
-      "completeText": "The countdown is complete. We saw each other again ❤️",
+      "todayText": "days left. Today is  Ü 'N ME ❤❤️",
+      "todayTag": "Today",
+      "completeText": "The countdown is complete. Ü 'N ME again❤️.",
       "completeTag": "Complete"
     }
   },
@@ -80,16 +80,26 @@ window.HOUSE_CONFIG = {
       "title": "Countdown",
       "width": "span-4",
       "enabled": true,
-      "targetDate": "2026-06-30"
+      "source": "reunion"
     },
     {
-      "id": "daily-first",
+      "id": "decision-matrix-copy-mprdrekb",
+      "category": "Decisions",
+      "tag": "Priorities",
+      "type": "decisionMatrix",
+      "title": "Elke Dag",
+      "width": "span-8",
+      "enabled": true,
+      "source": "ElkeDag"
+    },
+    {
+      "id": "daily-first-copy-mprdc6o7",
       "category": "Today",
       "tag": "Checkcheck",
       "type": "checklist",
-      "title": "Kaufenn yaaahh",
-      "width": "span-8",
-      "enabled": true,
+      "title": "Do these first copy",
+      "width": "span-4",
+      "enabled": false,
       "source": "daily",
       "limit": 5
     },
@@ -98,7 +108,7 @@ window.HOUSE_CONFIG = {
       "category": "House rhythm",
       "tag": "Huisvrouw ü",
       "type": "consistency",
-      "title": "Schoonmaken",
+      "title": "Consistency levels",
       "width": "span-5",
       "enabled": true
     },
@@ -113,13 +123,15 @@ window.HOUSE_CONFIG = {
       "enabled": true
     },
     {
-      "id": "red-flags",
-      "category": "Shopping",
-      "tag": "Shopping...",
-      "type": "redFlags",
-      "title": "Always check these in stock",
+      "id": "daily-first",
+      "category": "Today",
+      "tag": "Check Stocks",
+      "type": "checklist",
+      "title": "Kaufenn",
       "width": "span-3",
-      "enabled": true
+      "enabled": true,
+      "source": "ShoppingKaufen",
+      "limit": 5
     },
     {
       "id": "recipes",
@@ -131,12 +143,30 @@ window.HOUSE_CONFIG = {
       "enabled": true
     },
     {
+      "id": "red-flags",
+      "category": "Shopping",
+      "tag": "Shopping...",
+      "type": "redFlags",
+      "title": "Always check these in stock",
+      "width": "span-6",
+      "enabled": true
+    },
+    {
+      "id": "red-flags-copy-mprdvdun",
+      "category": "Shopping",
+      "tag": "Shopping...",
+      "type": "redFlags",
+      "title": "Always check these in stock copy",
+      "width": "span-6",
+      "enabled": true
+    },
+    {
       "id": "quick-actions",
       "category": "Notes",
       "tag": "Brainfarts",
       "type": "quickActions",
       "title": "Short Notes",
-      "width": "span-12",
+      "width": "span-7",
       "enabled": true
     },
     {
@@ -145,7 +175,7 @@ window.HOUSE_CONFIG = {
       "tag": "procedure",
       "type": "dailySop",
       "title": "Daily SOP",
-      "width": "span-4",
+      "width": "span-5",
       "enabled": true,
       "source": "dailySop"
     },
@@ -155,17 +185,59 @@ window.HOUSE_CONFIG = {
       "tag": "Priorities",
       "type": "decisionMatrix",
       "title": "Decisionssss",
-      "width": "span-8",
-      "enabled": true
+      "width": "span-12",
+      "enabled": true,
+      "source": "housePriorities"
     },
     {
-      "id": "sweet-notes",
-      "category": "Love",
-      "tag": "Love",
-      "type": "notes",
-      "title": "Little notes",
+      "id": "decision-matrix-2",
+      "category": "Decisions",
+      "tag": "Priorities",
+      "type": "decisionMatrix",
+      "title": "Decisions",
       "width": "span-6",
-      "enabled": false
+      "enabled": false,
+      "source": "housePriorities2"
+    },
+    {
+      "id": "decision-matrix-single",
+      "category": "Decisions",
+      "tag": "Urgent only",
+      "type": "decisionMatrix",
+      "title": "Only urgent",
+      "width": "span-4",
+      "enabled": false,
+      "source": "urgentOnly"
+    },
+    {
+      "id": "decision-matrix-expanded",
+      "category": "Decisions",
+      "tag": "Three choices",
+      "type": "decisionMatrix",
+      "title": "House choices",
+      "width": "span-8",
+      "enabled": false,
+      "source": "houseChoices"
+    },
+    {
+      "id": "countdown-date-night",
+      "category": "Love",
+      "tag": "Date night",
+      "type": "countdown",
+      "title": "Date night",
+      "width": "span-4",
+      "enabled": false,
+      "source": "dateNight"
+    },
+    {
+      "id": "countdown-homecoming",
+      "category": "Love",
+      "tag": "Home",
+      "type": "countdown",
+      "title": "Homecoming",
+      "width": "span-4",
+      "enabled": false,
+      "source": "homecoming"
     },
     {
       "id": "rooms",
@@ -192,6 +264,15 @@ window.HOUSE_CONFIG = {
       "type": "kanban",
       "title": "Routine Kanban",
       "width": "span-12",
+      "enabled": false
+    },
+    {
+      "id": "sweet-notes",
+      "category": "Love",
+      "tag": "Love",
+      "type": "notes",
+      "title": "Little notes",
+      "width": "span-6",
       "enabled": false
     }
   ],
@@ -232,18 +313,20 @@ window.HOUSE_CONFIG = {
         "completeText": "Homecoming countdown complete ❤️"
       }
     },
-    "daily": [
-      // "Open curtains and air the bedroom for 10 minutes.",
-      // "Keep the kitchen counter clear before bed.",
-      // "Check dishwasher: start it or empty it if needed.",
-      // "Make sure laundry is not forgotten in the washing machine.",
-      // "Lock the front door before sleeping."
+    "ShoppingKaufen": [
       "Muesli",
-      "Yoghurt",
-      "Coffee",
+      "Fromage Blanc",
+      "Koffie",
       "Brood + Beleg",
-      // "Brood Beleg",
-      "You feel overwhelmed",
+      "Gezonde snackies",
+      "Feeling Overwhelmed"
+    ],
+    "daily": [
+      "Open curtains and air the bedroom for 10 minutes.",
+      "Keep the kitchen counter clear before bed.",
+      "Check dishwasher: start it or empty it if needed.",
+      "Make sure laundry is not forgotten in the washing machine.",
+      "Lock the front door before sleeping."
     ],
     "dailySop": [
       "Open curtains and air the bedroom for 10 minutes.",
@@ -266,57 +349,47 @@ window.HOUSE_CONFIG = {
     ],
     "consistencies": [
       {
-        "title": "Stofzuigen",
-        "detail": "Ook al je restjes in de bank. VOORAL de restjes in de bank...",
+        "title": "Kitchen baseline",
+        "detail": "Counter clear, sink not full, dishwasher handled before bed.",
         "score": 90
       },
       {
-        "title": "WC",
-        "detail": "Je weet hoe het gaat.",
-        "score": 90
+        "title": "Laundry rhythm",
+        "detail": "Better one small load than a scary mountain later.",
+        "score": 75
       },
       {
-        "title": "Kleding wassen",
-        "detail": "Liefs om de dag iets, maar ik ben ook wel lui.",
+        "title": "Fresh air",
+        "detail": "Short airing moments are enough; do not leave windows open all day.",
         "score": 70
       },
       {
-        "title": "Beddengoed wassen",
-        "detail": "Liefst om de twee weken. Voral in de zomer zweet je best wel.",
-        "score": 50
-      },
-      {
-        "title": "Wasmachine wassen",
-        "detail": "Doe ik vaak eens per maand. 3 schepjes percarbonaat in de droger en dan 'Nettoyage Tambour' draaien.",
-        "score": 25
+        "title": "Calm house rule",
+        "detail": "If something smells weird, looks wet, or beeps: investigate sooner.",
+        "score": 95
       }
     ],
     "laundry": [
       {
-        "load": "Witte was",
-        "temp": "30°C",
-        "detergent": "Robijn wit, links onder in het kastje.",
-        "avoid": "Bewerk je oksels wel eerst MET EEN TANDENBORSTEL, want dan schrub je de magnesium van je deo en jouw zweet er uit."
-      },{
-        "load": "Zwarte/gekleurde/spijkerbroeken was",
-        "temp": "30-40°C",
-        "detergent": "Arial black / Revita black, links boven in het kastje.",
-        "avoid": "Bewerk je oksels wel eerst MET EEN TANDENBORSTEL, want dan schrub je de magnesium van je deo en jouw zweet er uit."
+        "load": "Normal clothes",
+        "temp": "30–40°C",
+        "detergent": "Normal detergent",
+        "avoid": "Avoid mixing bright colors with whites."
       },
       {
-        "load": "Handdoeken+onderbroeken+sokken",
-        "temp": "40°C",
-        "detergent": "Arial Mounain blabla, rechts boven in.",
+        "load": "Towels",
+        "temp": "60°C",
+        "detergent": "Normal detergent",
         "avoid": "Do not overload; towels need space."
       },
-      // {
-      //   "load": "Delicates / nice shirts",
-      //   "temp": "30°C gentle",
-      //   "detergent": "Small amount",
-      //   "avoid": "Do not tumble dry unless label says yes."
-      // },
       {
-        "load": "Beddengoed",
+        "load": "Delicates / nice shirts",
+        "temp": "30°C gentle",
+        "detergent": "Small amount",
+        "avoid": "Do not tumble dry unless label says yes."
+      },
+      {
+        "load": "Bedding",
         "temp": "40–60°C",
         "detergent": "Normal detergent",
         "avoid": "Dry fully before putting away."
@@ -324,54 +397,183 @@ window.HOUSE_CONFIG = {
     ],
     "recipes": [
       {
-        "name": "Pasta pesto comfort bowl",
+        "name": "Pasta Pesto",
         "time": "15 min",
         "ingredients": [
           "Pasta",
-          "Pesto",
-          "Tomatoes",
-          "Cheese"
+          "Pesto (groen)",
+          "Cherry Tomaatjes",
+          "Geraspte kaas",
+          "Rucola (optioneel)"
         ],
         "steps": [
-          "Boil pasta.",
-          "Save a spoon of pasta water.",
-          "Mix pesto and pasta water.",
-          "Add tomatoes and cheese."
+          "Kook de pasta, giet daarna af",
+          "Mix de pesto in de pan met pasta",
+          "Voeg de tomaatjes toe",
+          "Serveer met de kaas (en evt rucola)"
         ],
-        "note": "Impossible to ruin, almost."
+        "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
       },
       {
-        "name": "Rice bowl",
+        "name": "Chilli con Carne",
+        "time": "30 min",
+        "ingredients": [
+          "Rijst",
+          "100ml Tomatenpuree",
+          "Blikje Mais",
+          "Blikje Bonen",
+          "Vriezer Gehakt",
+          "Vriezer UI",
+          "Vriezer Wortel",
+          "Vriezer Paprika"
+        ],
+        "steps": [
+          "Kook de rijst",
+          "Rul het gehakt met de ui",
+          "Voeg komijn (cumin) toe",
+          "Voeg gochujang/sambal/chili olie toe",
+          "Voeg de vriezer groente toe",
+          "Voeg de blikjes toe",
+          "Voeg een dikke eetlepel tomatenpuree toe",
+          "Serveer met liefde"
+        ],
+        "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
+      },
+      {
+        "name": "Spagetti Bolognese",
         "time": "20 min",
         "ingredients": [
-          "Rice",
-          "Egg or tofu",
-          "Vegetables",
-          "Soy sauce"
+          "Spagetti",
+          "100ml Tomatenpure",
+          "Vriezer Gehakt",
+          "Vriezer UI",
+          "Vriezer Wortel",
+          "Vriezer Paprika",
+          "Kaas (optioneel)",
+          "Rode Wijnazijn"
         ],
         "steps": [
-          "Cook rice.",
-          "Fry vegetables.",
-          "Add protein.",
-          "Finish with sauce."
+          "Kook de spagetti",
+          "Rul het gehakt met de ui",
+          "Voeg kruiden en zout toe",
+          "Voeg evt gochujang/sambal/chili olie toe",
+          "Voeg de vriezer groente toe",
+          "Voeg een dikke eetlepel tomatenpuree toe",
+          "Serveer met de rode wijnazijn"
         ],
-        "note": "Good fridge-cleaning meal."
+        "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
       },
       {
-        "name": "Oven wraps",
-        "time": "18 min",
+        "name": "Rijst met Tonijn",
+        "time": "8 min",
         "ingredients": [
-          "Wraps",
-          "Cheese",
-          "Beans/chicken",
-          "Vegetables"
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
         ],
         "steps": [
-          "Fill wraps.",
-          "Fold and place in oven dish.",
-          "Bake until warm and crispy."
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
         ],
-        "note": "Very good lazy dinner."
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Pokebowl Zalm",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Lentejas",
+        "time": "8 min",
+        "ingredients": [
+          "Stokbroodje",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Kip met Rijst",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Asperge Kip",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Visschotel",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
+      },
+      {
+        "name": "Broccoli schotel",
+        "time": "8 min",
+        "ingredients": [
+          "Eggs",
+          "Butter",
+          "Salt",
+          "Pepper"
+        ],
+        "steps": [
+          "Whisk eggs.",
+          "Melt butter in pan.",
+          "Cook gently, stirring often."
+        ],
+        "note": "Add cheese or chives if you have them."
       }
     ],
     "quickActions": [
@@ -397,11 +599,10 @@ window.HOUSE_CONFIG = {
       }
     ],
     "shoppingStock": [
-        "Neem 's ochtends een banaan mee. Doe daarna wel de zak dicht, zodat er geen fruitvliegjes in kunnen. Die vinden het leuk om in de stam maden te kweken.",
-      "Laat de afval deksel dicht. Zelfde verhaal.",
-      "Gasfornuis gebruikt? Nogmaals, zelfde verhaal.",
-      "Airfyer? Oven? Maak ze altijd schoon na gebruik. Anders kook je de volgende keer ook met het brandalarm.",
-      "Lock the front door before sleeping.",
+      "Muesli",
+      "Yoghhhurt",
+      "Coffee",
+      "You feel overwhelmed"
     ],
     "troubleshooting": [
       {
@@ -421,18 +622,112 @@ window.HOUSE_CONFIG = {
         "fix": "Do only kitchen counter, trash, and laundry-machine check. That already helps."
       }
     ],
-    "decisionMatrix": {
-      "doNow": [
-        "Wet laundry",
-        "Weird smell",
-        "Unlocked door",
-        "Overflowing trash"
+    "decisionMatrices": {
+      "ElkeDag": [
+        {
+          "label": "'s ochtends",
+          "labelClass": "warn",
+          "title": "Tas Inpakken",
+          "items": [
+            "Fruit Meenemen",
+            "Mij goedemorgen appen ❤️",
+            "Mij appen dat je veilig bent aangekomen ❤️"
+          ]
+        },
+        {
+          "label": "'s avonds'",
+          "labelClass": "ok",
+          "title": "Tas Uitpakken!!!",
+          "items": [
+            "Sportkleding. Ja Tom. Je stinkt.",
+            "Flesje jus. Zet die in de week.",
+            "Brood smeren?",
+            "Mij Appen ❤️"
+          ]
+        }
       ],
-      "canWait": [
-        "Vacuum if not dirty",
-        "Deep cleaning",
-        "Fancy cooking",
-        "Perfect organization"
+      "housePriorities2": [
+        {
+          "label": "urgent",
+          "labelClass": "warn",
+          "title": "Do now",
+          "items": [
+            "Wet laundry",
+            "Weird smell",
+            "Unlocked door",
+            "Overflowing trash"
+          ]
+        },
+        {
+          "label": "pp",
+          "labelClass": "ok",
+          "title": "Can wait",
+          "items": [
+            "Vacuum if not dirty",
+            "Deep cleaning",
+            "Fancy ",
+            "Perfect organization"
+          ]
+        },
+        {
+          "label": "later",
+          "labelClass": "blue",
+          "title": "Later",
+          "items": [
+            "Sort old paperwork",
+            "Buy new plant pots"
+          ]
+        },
+        {
+          "label": "later",
+          "labelClass": "ok",
+          "title": "Later",
+          "items": [
+            "Sort old paperwork",
+            "Buy new plant pots"
+          ]
+        }
+      ],
+      "urgentOnly": [
+        {
+          "label": "urgent",
+          "labelClass": "warn",
+          "title": "Only do this",
+          "items": [
+            "Wet laundry",
+            "Weird smell",
+            "Unlocked door"
+          ]
+        }
+      ],
+      "houseChoices": [
+        {
+          "label": "now",
+          "labelClass": "warn",
+          "title": "Do now",
+          "items": [
+            "Wet laundry",
+            "Weird smell"
+          ]
+        },
+        {
+          "label": "soon",
+          "labelClass": "blue",
+          "title": "Do soon",
+          "items": [
+            "Trash",
+            "Dishwasher"
+          ]
+        },
+        {
+          "label": "optional",
+          "labelClass": "ok",
+          "title": "Can wait",
+          "items": [
+            "Deep cleaning",
+            "Fancy cooking"
+          ]
+        }
       ]
     },
     "rooms": [
