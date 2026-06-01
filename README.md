@@ -90,3 +90,9 @@ On mobile, all cards automatically become full-width.
 ## Browser layout editor
 
 Open the website and click **Edit layout**. You can move, hide, remove, duplicate, add, and resize frames from the page itself. These edits are stored in your browser. Use **Download config.js** to export the changed layout permanently, then replace `assets/config.js` in your GitHub Pages folder.
+
+### Latest visual cleanup
+
+- The translucent decorative blocks behind the hero greeting were removed.
+- Laundry `<summary>` markers are now custom CSS markers instead of browser-native Chrome markers, to avoid Chrome-only vertical rendering/focus artifacts inside the laundry items.
+- The `wasnadatwaswas` title still uses `titleMode: "clip"`, so it stays one line and is clipped at the card border.
