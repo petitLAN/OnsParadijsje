@@ -116,3 +116,22 @@ This version uses Inter for body text, Inter for h1/h2/h3/h4 headings, and Inter
 ## Latest UI tweak
 
 Frame type labels are hidden on the public dashboard. The countdown still uses `countdownTarget` in `assets/config.js`, but the page only shows the number of days and does not display the target date.
+
+## Editable visible card tags
+
+Each frame can now have a visible `tag` property. This is separate from `category`:
+
+- `category` is for internal organization in the editor/exported config.
+- `tag` is the small visible badge above the card title.
+
+Example:
+
+```js
+{ id: "laundry", category: "Instructions", tag: "Laundry day", type: "laundry", title: "Laundry guide", width: "span-4", enabled: true }
+```
+
+You can edit the tag directly in the browser layout editor by opening **Edit layout** and changing the **Card tag** field. Empty the field if you do not want a visible badge for that card.
+
+## Removed frame handle
+
+The decorative frame handle icon has been removed from the rendered cards and from the card template, because it did not render reliably.

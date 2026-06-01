@@ -39,7 +39,8 @@
           <li>Each card is one frame object in the <code>layout</code> array.</li>
           <li>Replicating a card creates a new frame with the same type and content.</li>
           <li>Changing <code>width</code> controls its grid span: <code>span-3</code>, <code>span-4</code>, <code>span-6</code>, <code>span-8</code>, or <code>span-12</code>.</li>
-          <li>All text/data lives in the <code>content</code> block.</li>
+          <li>Each frame can have its own editable <code>tag</code> and <code>title</code>.</li>
+          <li>All reusable text/data lives in the <code>content</code> block.</li>
         </ol>
       </div>
     </section>
@@ -53,9 +54,9 @@
     <article class="card frame-card">
       <div class="frame-card-head">
         <div>
+          <span class="tag frame-tag"></span>
           <h2 class="frame-title"></h2>
         </div>
-        <span class="frame-handle" title="Frame module">▦</span>
       </div>
       <div class="frame-body"></div>
     </article>

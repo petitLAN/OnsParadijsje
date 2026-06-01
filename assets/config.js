@@ -7,7 +7,8 @@
   To remove cards: delete a layout object or set enabled: false.
   To replicate cards: copy a layout object and give it a new id.
   To change card width: use span-3, span-4, span-5, span-6, span-7, span-8, or span-12.
-  To group frames: set category, for example category: "Food" or category: "Actions".
+  To group frames internally: set category, for example category: "Food" or category: "Actions".
+  To customize the visible small badge above a card: set tag, for example tag: "Today" or tag: "Love".
   To add quick action cards: use type: "quickActions" and edit content.quickActions.
   To add the numbered operations list: use type: "dailySop" and edit content.dailySop.
   To add the do-now/can-wait matrix: use type: "decisionMatrix" and edit content.decisionMatrix.
@@ -23,21 +24,21 @@ window.HOUSE_CONFIG = {
   },
 
   layout: [
-    { id: "countdown-main", category: "Love", type: "countdown", title: "Countdown", width: "span-4", enabled: true, targetDate: "2026-06-30" },
-    { id: "daily-first", category: "Today", type: "checklist", title: "Do these first", width: "span-8", enabled: true, source: "daily", limit: 5 },
-    { id: "consistency", category: "House rhythm", type: "consistency", title: "Consistency levels", width: "span-5", enabled: true },
-    { id: "laundry", category: "Instructions", type: "laundry", title: "Laundry guide", width: "span-4", enabled: true },
-    { id: "red-flags", category: "Help", type: "redFlags", title: "Red flags", width: "span-3", enabled: true },
-    { id: "recipes", category: "Food", type: "recipes", title: "Easy food cards", width: "span-12", enabled: true },
-    { id: "quick-actions", category: "Actions", type: "quickActions", title: "Quick actions", width: "span-12", enabled: true },
-    { id: "daily-sop", category: "Routine", type: "dailySop", title: "Daily SOP", width: "span-6", enabled: true, source: "dailySop" },
-    { id: "decision-matrix", category: "Decisions", type: "decisionMatrix", title: "Decision matrix", width: "span-6", enabled: true },
+    { id: "countdown-main", category: "Love", tag: "Love", type: "countdown", title: "Countdown", width: "span-4", enabled: true, targetDate: "2026-06-30" },
+    { id: "daily-first", category: "Today", tag: "Today", type: "checklist", title: "Do these first", width: "span-8", enabled: true, source: "daily", limit: 5 },
+    { id: "consistency", category: "House rhythm", tag: "House rhythm", type: "consistency", title: "Consistency levels", width: "span-5", enabled: true },
+    { id: "laundry", category: "Instructions", tag: "Instructions", type: "laundry", title: "Laundry guide", width: "span-4", enabled: true },
+    { id: "red-flags", category: "Help", tag: "Help", type: "redFlags", title: "Red flags", width: "span-3", enabled: true },
+    { id: "recipes", category: "Food", tag: "Food", type: "recipes", title: "Easy food cards", width: "span-12", enabled: true },
+    { id: "quick-actions", category: "Actions", tag: "Actions", type: "quickActions", title: "Quick actions", width: "span-12", enabled: true },
+    { id: "daily-sop", category: "Routine", tag: "Routine", type: "dailySop", title: "Daily SOP", width: "span-6", enabled: true, source: "dailySop" },
+    { id: "decision-matrix", category: "Decisions", tag: "Decisions", type: "decisionMatrix", title: "Decision matrix", width: "span-6", enabled: true },
 
     /* Extra frames are included but disabled, so you can enable/copy them later. */
-    { id: "rooms", category: "Rooms", type: "rooms", title: "Room map", width: "span-12", enabled: false },
-    { id: "dayflow", category: "Routine", type: "dayflow", title: "Dayflow", width: "span-12", enabled: false },
-    { id: "kanban", category: "Routine", type: "kanban", title: "Routine Kanban", width: "span-12", enabled: false },
-    { id: "sweet-notes", category: "Love", type: "notes", title: "Little notes", width: "span-6", enabled: false }
+    { id: "rooms", category: "Rooms", tag: "Rooms", type: "rooms", title: "Room map", width: "span-12", enabled: false },
+    { id: "dayflow", category: "Routine", tag: "Routine", type: "dayflow", title: "Dayflow", width: "span-12", enabled: false },
+    { id: "kanban", category: "Routine", tag: "Routine", type: "kanban", title: "Routine Kanban", width: "span-12", enabled: false },
+    { id: "sweet-notes", category: "Love", tag: "Love", type: "notes", title: "Little notes", width: "span-6", enabled: false }
   ],
 
   content: {

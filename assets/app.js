@@ -1,5 +1,5 @@
 (() => {
-  const STORAGE_KEY = "ons-paradijsje-modular-layout-v3";
+  const STORAGE_KEY = "ons-paradijsje-modular-layout-v4-editable-tags";
   const config = structuredClone(window.HOUSE_CONFIG);
   let layout = loadLayout();
   const dashboard = document.getElementById("dashboard");
@@ -66,12 +66,13 @@
     article.className = `card frame-card ${frame.width || "span-4"} ${frame.type === "countdown" ? "countdown-card" : ""}`;
     article.id = slug(frame.id);
     article.dataset.frameId = frame.id;
+    const frameTag = frame.tag || frame.label || "";
     article.innerHTML = `
       <div class="frame-card-head">
         <div>
+          ${frameTag ? `<span class="tag frame-tag">${esc(frameTag)}</span>` : ""}
           <h2>${esc(frame.title || FRAME_TYPES[frame.type] || "Frame")}</h2>
         </div>
-        <span class="frame-handle" title="Frame module">▦</span>
       </div>
       <div class="frame-body">${body}</div>`;
     return article;
@@ -249,6 +250,14 @@
         <div>
           <h4>${esc(frame.title || frame.type)}</h4>
           <p class="small">${esc(frame.id)} · ${esc(frame.category || "Uncategorized")} · ${esc(FRAME_TYPES[frame.type] || frame.type)} · ${esc(frame.width || "span-4")} · ${frame.enabled === false ? "hidden" : "visible"}</p>
+          <div class="frame-edit-fields">
+            <label>Card tag
+              <input class="frame-text-input" type="text" data-action="tag" data-index="${index}" value="${esc(frame.tag || frame.label || "")}" placeholder="Optional badge above title">
+            </label>
+            <label>Card title
+              <input class="frame-text-input" type="text" data-action="title" data-index="${index}" value="${esc(frame.title || "")}" placeholder="Visible card title">
+            </label>
+          </div>
         </div>
         <div class="frame-actions">
           <button type="button" data-action="up" data-index="${index}">↑</button>
@@ -276,6 +285,7 @@
     const copy = structuredClone(layout[index]);
     copy.id = `${slug(copy.id)}-copy-${Date.now().toString(36)}`;
     copy.title = `${copy.title || FRAME_TYPES[copy.type] || "Frame"} copy`;
+    copy.tag = copy.tag || copy.label || defaultTag(copy.type);
     copy.enabled = true;
     layout.splice(index + 1, 0, copy);
     saveLayout();
@@ -301,6 +311,10 @@
     })[type] || "General";
   }
 
+  function defaultTag(type) {
+    return FRAME_TYPES[type] || "Frame";
+  }
+
   function defaultWidth(type) {
     return ({
       customHtml: "span-6",
@@ -316,7 +330,7 @@
 
   function addFrame(type) {
     const id = `${slug(type)}-${Date.now().toString(36)}`;
-    const frame = { id, type, category: defaultCategory(type), title: FRAME_TYPES[type] || "New frame", width: defaultWidth(type), enabled: true };
+    const frame = { id, type, category: defaultCategory(type), tag: defaultTag(type), title: FRAME_TYPES[type] || "New frame", width: defaultWidth(type), enabled: true };
     if (type === "checklist") frame.source = "daily";
     if (type === "dailySop") frame.source = "dailySop";
     if (type === "countdown") frame.targetDate = config.meta.countdownTarget;
@@ -432,11 +446,30 @@
 
     frameList.addEventListener("change", event => {
       const select = event.target.closest('select[data-action="width"]');
-      if (!select) return;
-      const index = Number(select.dataset.index);
-      layout[index].width = select.value;
+      if (select) {
+        const index = Number(select.dataset.index);
+        layout[index].width = select.value;
+        saveLayout();
+        renderDashboard();
+        return;
+      }
+
+      const input = event.target.closest('input[data-action="tag"], input[data-action="title"]');
+      if (!input) return;
+      const index = Number(input.dataset.index);
+      const action = input.dataset.action;
+      layout[index][action] = input.value.trim();
+      if (action === "tag" && !layout[index].tag) delete layout[index].tag;
       saveLayout();
       renderDashboard();
+    });
+
+    frameList.addEventListener("keydown", event => {
+      if (event.key !== "Enter") return;
+      const input = event.target.closest('input[data-action="tag"], input[data-action="title"]');
+      if (!input) return;
+      event.preventDefault();
+      input.blur();
     });
   }
 
