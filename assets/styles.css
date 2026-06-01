@@ -42,28 +42,78 @@ button,select{font:inherit}
   margin-bottom:24px;
 }
 .hero:before{
-  content:"ONS PARADIJSJE";
+  /* CSS recreation of the overlapping stain/logo.
+     The previous version used percentage radii that reached the pseudo-element
+     bounds, so the stain looked cut off by a hidden square. This version uses
+     pixel-based concentric circles placed safely inside a larger canvas. */
+  content:"";
   position:absolute;
-  right:36px;
-  top:30px;
-  width:178px;
-  height:178px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  text-align:center;
-  background:var(--lime);
-  color:var(--pink);
-  font-weight:950;
-  font-size:20px;
-  line-height:.86;
-  box-shadow:0 0 0 8px var(--pink),0 0 0 14px var(--lime),0 12px 0 #26356e;
-  transform:rotate(5deg);
+  right:18px;
+  top:18px;
+  width:420px;
+  height:318px;
+  z-index:0;
+  pointer-events:none;
+  background:
+    /* pink rings, drawn on top so both circles visibly overlap */
+    radial-gradient(circle at 160px 150px,
+      transparent 0 94px,
+      var(--pink) 95px 111px,
+      transparent 112px),
+    radial-gradient(circle at 276px 184px,
+      transparent 0 86px,
+      var(--pink) 87px 103px,
+      transparent 104px),
+
+    /* yellow outer borders aligned to the same circle centers */
+    radial-gradient(circle at 160px 150px,
+      transparent 0 111px,
+      var(--lime) 112px 145px,
+      transparent 146px),
+    radial-gradient(circle at 276px 184px,
+      transparent 0 103px,
+      var(--lime) 104px 134px,
+      transparent 135px),
+
+    /* yellow fills underneath the pink rings */
+    radial-gradient(circle at 160px 150px,
+      var(--lime) 0 96px,
+      transparent 97px),
+    radial-gradient(circle at 276px 184px,
+      var(--lime) 0 88px,
+      transparent 89px),
+
+    /* tiny soft yellow bridge so the overlap reads as one stain */
+    radial-gradient(ellipse at 222px 174px,
+      var(--lime) 0 52px,
+      transparent 54px);
+  filter:
+    drop-shadow(0 7px 0 rgba(255,43,189,.82))
+    drop-shadow(0 15px 0 rgba(38,53,110,.32));
+  transform:rotate(7deg);
 }
 .hero:after{
-  /* Removed the translucent decorative blocks behind the greeting text. */
-  content:none;
-  display:none;
+  /* Extra paint drops around the CSS logo. Kept localized to the top-right,
+     so it does not recreate the old translucent block behind the text. */
+  content:"";
+  position:absolute;
+  right:52px;
+  top:213px;
+  width:24px;
+  height:24px;
+  z-index:0;
+  pointer-events:none;
+  border-radius:50%;
+  background:var(--pink);
+  box-shadow:
+    -265px -154px 0 12px var(--pink),
+    -236px -168px 0 -2px var(--pink),
+    -294px -128px 0 -3px var(--pink),
+    -206px 24px 0 10px var(--lime),
+    -246px -3px 0 8px var(--pink),
+    -26px 30px 0 -2px var(--pink),
+    7px 34px 0 -7px var(--pink);
+  transform:rotate(7deg);
 }
 .hero>*{position:relative;z-index:1;max-width:760px}
 h1,h2,h3,h4{margin:0;line-height:.95;text-transform:uppercase;font-family:var(--font-heading);font-weight:950}
@@ -135,8 +185,8 @@ p{color:var(--cream);line-height:1.58;font-weight:750}.small{font-size:13px}.tin
 }
 .board{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.column{background:#2e3f84;border:4px solid var(--cream);border-radius:30px;padding:16px;min-height:280px;box-shadow:10px 10px 0 var(--pink)}.task-card{background:var(--cream);color:#354c9f;border:3px solid var(--peach);border-radius:22px;padding:14px;margin-top:12px;box-shadow:7px 7px 0 rgba(236,255,25,.7)}.task-card strong{color:#354c9f}.time-block{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:start;margin-top:16px}.time-pill{background:var(--lime);color:var(--pink);padding:13px 14px;border-radius:999px;text-align:center;font-weight:950;text-transform:uppercase;box-shadow:0 7px 0 var(--pink)}.room-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.room-tile{min-height:230px;background:var(--cream);color:#354c9f;border:5px solid var(--peach);border-radius:36px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:13px 13px 0 var(--pink)}.room-tile h2{color:var(--pink);text-shadow:none}.room-tile li,.room-tile label{color:#354c9f;font-weight:850}.footer-note{margin:34px 0 8px;border-top:2px dashed rgba(255,243,219,.35);padding-top:16px;color:var(--cream);font-weight:800}
 [hidden]{display:none!important}
-@media(max-width:1050px){.grid{grid-template-columns:1fr}.span-3,.span-4,.span-5,.span-6,.span-7,.span-8,.span-12{grid-column:span 1}.board,.layout-editor{grid-template-columns:1fr}.hero:before{width:132px;height:132px;font-size:14px;right:18px}.score-row{grid-template-columns:1fr}}
-@media(max-width:650px){.page{padding:18px}.room-grid,.time-block{grid-template-columns:1fr}.hero{border-radius:0 0 34px 34px}.hero:before{display:none}h1{font-size:56px}.card{border-radius:28px}.frame-row{grid-template-columns:1fr}.frame-actions{justify-content:flex-start}}
+@media(max-width:1050px){.grid{grid-template-columns:1fr}.span-3,.span-4,.span-5,.span-6,.span-7,.span-8,.span-12{grid-column:span 1}.board,.layout-editor{grid-template-columns:1fr}.hero:before{width:285px;height:216px;right:-4px;top:20px;opacity:.74;transform:scale(.68) rotate(7deg);transform-origin:top right}.hero:after{right:28px;top:160px;transform:scale(.68) rotate(7deg);opacity:.74}.score-row{grid-template-columns:1fr}}
+@media(max-width:650px){.page{padding:18px}.room-grid,.time-block{grid-template-columns:1fr}.hero{border-radius:0 0 34px 34px}.hero:before,.hero:after{display:none}h1{font-size:56px}.card{border-radius:28px}.frame-row{grid-template-columns:1fr}.frame-actions{justify-content:flex-start}}
 
 
 /* Optional per-frame title clipping.

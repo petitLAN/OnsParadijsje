@@ -91,3 +91,9 @@ Recipe cards use `class="mini-grid recipe-grid"`. The `.recipe-grid` CSS caps re
 ## Countdown display
 
 Countdown cards show the large number, the configured countdown text, and the tags. They do not show the exact target date and they do not show number fun facts. Edit each countdown source under `content.countdowns` in `assets/config.js`.
+
+
+Logo refinement: the two yellow circles are now drawn as concentric layers under the pink rings, so the yellow border follows the same circle shapes and the two rings visibly overlap more like the reference.
+
+
+Logo refinement v4: the stain/logo now uses a larger CSS canvas with pixel-based concentric circle layers, preventing the yellow border from being clipped into straight square edges.
