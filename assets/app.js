@@ -348,7 +348,7 @@
       const label = target.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
       if (dayDiff > 1) {
         daysEl.textContent = dayDiff;
-        textEl.innerHTML = `${esc(ui.countdown?.manyDaysText || "days until we see each other again.")}<span class="countdown-date">${esc(ui.countdown?.targetPrefix || "Target:")} ${esc(label)}</span>`;
+        textEl.innerHTML = `${esc(ui.countdown?.manyDaysText || "days until we see each other again.")}</span>`;
         tagEl.textContent = ui.countdown?.daysLeftTag || "Days left";
       } else if (dayDiff === 1) {
         daysEl.textContent = "1";
@@ -374,8 +374,16 @@
   function restoreChecks() {
     document.querySelectorAll('input[type="checkbox"][data-check]').forEach(input => {
       const key = `ons-paradijsje-${input.dataset.check}`;
+      const updateDoneState = () => {
+        const label = input.closest("label");
+        if (label) label.classList.toggle("is-done", input.checked);
+      };
       input.checked = localStorage.getItem(key) === "1";
-      input.addEventListener("change", () => localStorage.setItem(key, input.checked ? "1" : "0"));
+      updateDoneState();
+      input.addEventListener("change", () => {
+        localStorage.setItem(key, input.checked ? "1" : "0");
+        updateDoneState();
+      });
     });
   }
 

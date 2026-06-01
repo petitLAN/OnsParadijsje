@@ -20,7 +20,7 @@ window.HOUSE_CONFIG = {
     documentTitle: "Ons Paradijsje — Modular Dashboard",
     title: "Ons Paradijsje",
     subtitle: "Eat. Sleep. Janken. Repeat. Althans, totdat ik weer terugkom om jouw huisvrouwtje te zijn.",
-    greeting: "Hallow Poetsjiepoeh c3 dit zijn niet per se de huisregels, gewoon een uitgebreide todo lijst wat ik zoal doe als jij druk geld verdient. Of soms ook niet doe...",
+    greeting: "Hallow Poetsjiepoeh c==3 dit zijn niet per se de huisregels, gewoon een uitgebreide todo lijst wat ik zoal doe als jij druk geld verdient. Of soms ook niet doe...",
     helper: "",
     heroLabel: "Modular house dashboard",
     countdownTarget: "2026-06-30"
@@ -169,7 +169,8 @@ window.HOUSE_CONFIG = {
     shoppingStock: [
       "Muesli",
       "Yoghurt",
-      "Coffee",
+      "Koffie",
+      "Bread",
       "You feel overwhelmed"
     ],
 
