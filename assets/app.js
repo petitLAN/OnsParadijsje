@@ -99,6 +99,41 @@
     return `<ul class="clean">${(items || []).map(item => `<li>${esc(item)}</li>`).join("")}</ul>`;
   }
 
+  function splitLeadingEmoji(value) {
+    const text = String(value ?? "").trim();
+    // Lets decision-matrix strings like "🚿 Schone Handdoek" use the emoji
+    // as the marker, while normal strings keep the default bullet.
+    const match = text.match(/^(\p{Extended_Pictographic}(?:\uFE0F|\uFE0E)?(?:\u200D\p{Extended_Pictographic}(?:\uFE0F|\uFE0E)?)*)\s+(.+)$/u);
+    if (!match) return { emoji: "", text };
+    return { emoji: match[1], text: match[2] };
+  }
+
+  function normalizeDecisionItem(item) {
+    if (item && typeof item === "object") {
+      const emoji = item.emoji || item.icon || item.marker || "";
+      const text = item.text || item.item || item.task || item.label || item.title || item.name || item.problem || "";
+      const detail = item.note || item.detail || item.description || item.fix || "";
+      return { emoji: String(emoji || "").trim(), text: String(text || "").trim(), detail: String(detail || "").trim() };
+    }
+
+    const parsed = splitLeadingEmoji(item);
+    return { emoji: parsed.emoji, text: parsed.text, detail: "" };
+  }
+
+  function decisionList(items) {
+    const rows = (items || [])
+      .map(normalizeDecisionItem)
+      .filter(item => item.text || item.emoji || item.detail);
+
+    return `<ul class="clean matrix-list">${rows.map(item => {
+      const detail = item.detail ? `<span class="matrix-item-detail">${esc(item.detail)}</span>` : "";
+      if (!item.emoji) {
+        return `<li>${esc(item.text)}${detail}</li>`;
+      }
+      return `<li class="matrix-item-has-emoji"><span class="matrix-item-emoji" aria-hidden="true">${esc(item.emoji)}</span><span class="matrix-item-content"><span class="matrix-item-text">${esc(item.text)}</span>${detail}</span></li>`;
+    }).join("")}</ul>`;
+  }
+
   function checklist(items, frameId) {
     return `<div class="check">${(items || []).map((item, index) => {
       const key = `${frameId}-${index}`;
@@ -181,15 +216,129 @@
   }
 
   function renderConsistency(frame) {
-    const rows = (config.content.consistencies || []).map(item => `
-      <div class="score-row">
-        <strong>${esc(item.title)}</strong>
-        <div class="bar"><span style="width:${Math.max(0, Math.min(100, Number(item.score || 0)))}%"></span></div>
-        <span class="small">${esc(item.score)}%</span>
-      </div>
-      <p class="tinyline">${esc(item.detail)}</p>
-    `).join("");
-    return renderShell(frame, rows, "status frame");
+    const items = frame.items || config.content?.consistencies || [];
+    const html = items.map(item => {
+      const displayValue = getConsistencyDisplayValue(item);
+      const fillPercent = getConsistencyFillPercent(item);
+      const label = displayValue ? `<span class="small consistency-value">${esc(displayValue)}</span>` : "";
+
+      return `
+        <div class="score-row consistency-row">
+          <strong>${esc(item.title || "")}</strong>
+          <div class="bar"><span style="width:${fillPercent}%"></span></div>
+          ${label}
+        </div>
+        ${item.detail ? `<p class="tinyline">${esc(item.detail)}</p>` : ""}
+      `;
+    }).join("");
+
+    return renderShell(frame, html, "consistency frame");
+  }
+
+  function getConsistencyDisplayValue(item) {
+    if (!item || typeof item !== "object") return "";
+
+    if (item.display) return String(item.display);
+    if (item.label) return String(item.label);
+
+    if (item.frequency) {
+      return frequencyToFractionLabel(item.frequency);
+    }
+
+    if (typeof item.every === "number") {
+      const numerator = typeof item.times === "number" ? item.times : 1;
+      return `${numerator}/${item.every}`;
+    }
+
+    if (typeof item.denominator === "number") {
+      const numerator = typeof item.numerator === "number" ? item.numerator : 1;
+      return `${numerator}/${item.denominator}`;
+    }
+
+    if (typeof item.score === "number") {
+      return `${item.score}%`;
+    }
+
+    return "";
+  }
+
+  function getConsistencyFillPercent(item) {
+    if (!item || typeof item !== "object") return 0;
+
+    if (typeof item.fill === "number") {
+      return clampConsistencyNumber(item.fill, 0, 100);
+    }
+
+    if (typeof item.score === "number") {
+      return clampConsistencyNumber(item.score, 0, 100);
+    }
+
+    const fraction = getConsistencyFraction(item);
+    if (fraction && fraction.denominator !== 0) {
+      return clampConsistencyNumber((fraction.numerator / fraction.denominator) * 100, 2, 100);
+    }
+
+    return 0;
+  }
+
+  function getConsistencyFraction(item) {
+    if (!item || typeof item !== "object") return null;
+
+    if (item.frequency) {
+      return frequencyToFraction(item.frequency);
+    }
+
+    if (typeof item.every === "number") {
+      return {
+        numerator: typeof item.times === "number" ? item.times : 1,
+        denominator: item.every
+      };
+    }
+
+    if (typeof item.denominator === "number") {
+      return {
+        numerator: typeof item.numerator === "number" ? item.numerator : 1,
+        denominator: item.denominator
+      };
+    }
+
+    return null;
+  }
+
+  function frequencyToFractionLabel(value) {
+    const fraction = frequencyToFraction(value);
+    if (!fraction) return String(value || "");
+    return `${fraction.numerator}/${fraction.denominator}`;
+  }
+
+  function frequencyToFraction(value) {
+    if (typeof value === "number") {
+      return { numerator: 1, denominator: value };
+    }
+
+    const text = String(value || "").trim();
+    if (!text) return null;
+
+    const slashMatch = text.match(/^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)$/);
+    if (slashMatch) {
+      return {
+        numerator: Number(slashMatch[1]),
+        denominator: Number(slashMatch[2])
+      };
+    }
+
+    const numberMatch = text.match(/^\d+(?:\.\d+)?$/);
+    if (numberMatch) {
+      return { numerator: 1, denominator: Number(text) };
+    }
+
+    return null;
+  }
+
+  function clampConsistencyNumber(value, min, max) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return min;
+    return Math.max(min, Math.min(max, number));
   }
 
   function normalizeTextList(value) {
@@ -229,15 +378,64 @@
   }
 
   function renderLaundry(frame) {
-    const html = (config.content.laundry || []).map(item => `
-      <details>
-        <summary>${esc(item.load)} — ${esc(item.temp)}</summary>
-        <p><strong>Detergent:</strong> ${esc(item.detergent)}</p>
-        ${renderAvoidBlock(item)}
-      </details>
-    `).join("");
+    const html = (config.content.laundry || []).map(item => {
+      const summary = [item.load, item.temp].filter(Boolean).join(" — ");
+      const detergentLine = item.detergent
+        ? `<p><strong>${esc(item.detergentLabel || "Was Spul")}:</strong> ${esc(item.detergent)}</p>`
+        : "";
+      const noteLine = renderLaundryNoteLine(item);
+
+      return `
+        <details>
+          <summary>${esc(summary)}</summary>
+          ${detergentLine}
+          ${noteLine}
+        </details>
+      `;
+    }).join("");
+
     return renderShell(frame, html, "instruction frame");
   }
+
+  function renderLaundryNoteLine(item) {
+    const notes = normalizeLaundryNotes(item);
+    if (!notes.length) return "";
+
+    const label = item.avoidLabel || item.avoidsLabel || item.noteLabel || item.notesLabel || item.label || "Avoid";
+    const labelText = formatLaundryLabel(label);
+
+    if (notes.length === 1) {
+      return `<div class="laundry-note"><p><strong>${esc(labelText)}</strong> ${esc(notes[0])}</p></div>`;
+    }
+
+    return `
+      <div class="laundry-note">
+        <p><strong>${esc(labelText)}</strong></p>
+        <ul class="clean">
+          ${notes.map(note => `<li>${esc(note)}</li>`).join("")}
+        </ul>
+      </div>
+    `;
+  }
+
+  function normalizeLaundryNotes(item) {
+    const raw = item.notes ?? item.note ?? item.avoids ?? item.avoid ?? [];
+
+    if (Array.isArray(raw)) {
+      return raw
+        .map(value => String(value || "").trim())
+        .filter(Boolean);
+    }
+
+    const text = String(raw || "").trim();
+    return text ? [text] : [];
+  }
+
+  function formatLaundryLabel(label) {
+    const text = String(label || "Avoid").trim();
+    return /[:：]$/.test(text) ? text : `${text}:`;
+  }
+
 
   function normalizeRedFlagBlock(frame) {
     const source = frame.source || "shoppingStock";
@@ -400,7 +598,7 @@
         <span class="tag ${esc(labelClass)}">${esc(labelText)}</span>
         <h3>${esc(titleText)}</h3>
         ${note}
-        ${list(column.items)}
+        ${decisionList(column.items)}
       </article>`;
     }).join("")}
     </div>`;
