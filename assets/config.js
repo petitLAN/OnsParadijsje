@@ -494,7 +494,7 @@ window.HOUSE_CONFIG = {
                     "Sportkleding geeft geen kleur af of neemt andere kleuren op.",
                     "Sportkleding kan daarom gemixt met elke kleur, maarja het stinkt wel.",
                     "Bind altijd de (broek) touwtjes aan elkaar met een dubbele knoop.",
-                    "Stinkt de sportkleding 💩? Doe er een chepje Baking Soda bij (Bicarbonate).",
+                    "Stinkt de sportkleding 💩? Doe er een schepje Baking Soda bij (Bicarbonate).",
                     "Bicarbonate maakt katoen wel wat croky: wat azijn in de wasverzachter helpt. Helaas loopt dat soms direct uit de bak, idk why, maar is wel heel gepruts, want het mag niet met wasmiddel mengen: dan werkt het niet meer."
                 ]
             },
@@ -596,7 +596,7 @@ window.HOUSE_CONFIG = {
                 ],
                 "steps": [
                     "Kook de rijst",
-                    "Rijs gaar? Gooi het blikvoedsel er bij.",
+                    "Rijst gaar? Gooi het blikvoedsel er bij.",
                     "Kook wat water. Doe 1 eetlepel zeewier in een glas.",
                     "Gooi langzaam een beetje heet water bij de zeewier tot het zacht is.",
                     "Serveer de prut met zeewier op je bord."
@@ -617,7 +617,7 @@ window.HOUSE_CONFIG = {
                 ],
                 "steps": [
                     "Kook de rijst",
-                    "Doe er een zuurtje bij pas als het klaar is.",
+                    "Doe er een zuurtje bij pas als het gaar is.",
                     "Bereid het zeewier voor.",
                     "Bereid de mayo voor waar nodig.",
                     "Snij de zalm. Ontvel waar nodig.",
@@ -646,7 +646,7 @@ window.HOUSE_CONFIG = {
                     "Gooi wortel en paprika er bij.",
                     "Gooi UITEGELEKTE linzen er bij.",
                     "Gooi er kruiden bij waar nodig.",
-                    "Serveer met wat brood."
+                    "Serveer evt met brood."
                 ],
                 "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
             },
@@ -688,7 +688,7 @@ window.HOUSE_CONFIG = {
                     "Giet het water van de asperge bij de kip. Haal de asperges er voorzichtig uit.",
                     "Snijd de asperges OP EEN BORD. Dan kun je na het snijden ook dit sap nog bij de pan doen.",
                     "Snijd de asperge in behapbare stukjes. De toppen zijn zachter dus die kunnen wat langer gesneden. De boothies zijn wat harder, dus die wat fijner snijden.",
-                    "Gooi en het in de pan. NU PAS het vuur op laag aan doen.",
+                    "Gooi het in de pan. NU PAS het vuur op laag aan doen.",
                     "Doe er wat zout bij.",
                     "Langzaam begint de kip zachter te worden. Als het binnenste ontdooit is, kun je met twee vorken het uit elkaar trekken.",
                     "Doe 1 kipstuk op hetzelfde aspergebord. Trek de kip uit elkaar met 2 vorken. 💦💦💦 In de pan spettert het en dat doet au au. De kip mag nog wat rood zijn.",
@@ -710,7 +710,7 @@ window.HOUSE_CONFIG = {
                     "Warm de saus op met venkel er in.",
                     "Doe de vismix er bij. Eventueel broccoli er bij voor extra vriendjes.",
                     "Voeg nog zout toe of extra kruiden naar smaak.",
-                    "Serveer"
+                    "Serveer met luv"
                 ],
                 "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
             },
@@ -727,7 +727,7 @@ window.HOUSE_CONFIG = {
                     "Doe de Vriezerliefde in de pan. De ricotta kan er ook wel direct bij.",
                     "Doe de vismix er bij. Eventueel broccoli er bij voor extra vriendjes.",
                     "Voeg nog zout toe of extra kruiden naar smaak.",
-                    "Serveer"
+                    "Serveer met luv"
                 ],
                 "note": "Mij een appje sturen dat je lekker hebt gekookt ❤️"
             },
@@ -780,19 +780,19 @@ window.HOUSE_CONFIG = {
                 "emoji": "🍞",
                 "description": "1 broodje met chocopasta!! Meer? -> eet avondeten"
             },
-            {
-                "title": "Tape op de wand is niet raar",
-                "emoji": "✂️",
-                "description": "De tap zit daar om te voorkomen dat de potloden op de wand tekenen... Er zitten al wat krasje op helaas."
-            },
+            // {
+            //     "title": "Tape op de wand is niet raar",
+            //     "emoji": "✂️",
+            //     "description": "De tap zit daar om te voorkomen dat de potloden op de wand tekenen... Er zitten al wat krasje op helaas."
+            // },
             {
                 "title": "De Muismat is heilig ",
                 "emoji": "🖱️",
                 "description": "Kruimels = vlekken = schimmel = er niet uit te wassen. Wat voor papier dan ook er onder is fine."
             },
             {
-                "title": "Jus op een bordje snijden",
-                "emoji": "🍽️",
+                "title": "Jus op een bordje snijden 🍽️",
+                "emoji": "🍊",
                 "description": "Zuur trekt in het hout. Hout not likey."
             },
             {
@@ -804,6 +804,11 @@ window.HOUSE_CONFIG = {
                 "title": "Raam dicht doen",
                 "emoji": "🪟",
                 "description": "Anderen hoeven me niet achterna"
+            },
+            {
+                "title": "Dansende rijst",
+                "emoji": "🍚",
+                "description": "Desnoods met pan en al in de koelkast"
             }
         ],
         "decisionMatrices": {
@@ -1108,6 +1113,10 @@ window.HOUSE_CONFIG = {
             {
                 "problem": "Grote trekking rugzak",
                 "fix": "Links boven in"
+            },
+            {
+                "problem": "Ventilator",
+                "fix": "Links boven in plastic bak"
             },
             {
                 "problem": "Tennis spul",
